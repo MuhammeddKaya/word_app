@@ -19,10 +19,9 @@ export default function HomeScreen({}) {
         <Text style={{ marginRight: 12, fontSize: 18 }}>Seviye</Text>
         <View style={{ borderWidth: 1, borderColor: ACCENT, borderRadius: 8, overflow: 'hidden' }}>
           <Picker
-            selectedValue={level}
-            onValueChange={({ value }: { value: string }) => setLevel(value as 'kolay' | 'orta' | 'zor' | 'kelimelerim')}
+            onValueChange={(value) => setLevel(value as 'kolay' | 'orta' | 'zor' | 'kelimelerim')}
             mode="dropdown"
-            style={{ height: 44, width: 160, backgroundColor: ACCENT, color: '#fff', alignItems: 'center', justifyContent: 'center' }}
+            style={{ height: 60, width: 160, backgroundColor: ACCENT, color: '#fff', alignItems: 'center', justifyContent: 'center' }}
           >
             <Picker.Item label="Kolay" value="kolay" />
             <Picker.Item label="Orta" value="orta" />

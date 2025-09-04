@@ -1,29 +1,37 @@
-import { StyleSheet, Text, View, useWindowDimensions, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, useWindowDimensions, ScrollView, Alert } from 'react-native'
 import React from 'react'
 import TestComponent from '@/components/tests'
 import { useLocalSearchParams } from 'expo-router'
 
+import sets from '../../assets/data/words'
+
 export default function wordtests() {
   const { level } = useLocalSearchParams() // 'kolay' | 'orta' | 'zor' | 'kelimelerim'
 
-  const items = ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5',
-                 'Test 6', 'Test 7', 'Test 8', 'Test 9', 'Test 10',
-                 'Test 11', 'Test 12', 'Test 13', 'Test 14', 'Test 15',
-                 'Test 16', 'Test 17', 'Test 18', 'Test 19', 'Test 20'];
+  const items = sets
+  console.log('level', level);
 
-  // örnek metadata: her öğeye difficulty ve owner ekliyoruz — gerçek veriye göre ayarla
-  const difficulties = ['kolay', 'orta', 'zor']
-  const itemsMeta = items.map((name, i) => ({
-    name,
-    difficulty: difficulties[i % difficulties.length],
-    owner: i % 5 === 0 ? 'me' : 'other',
-  }))
+  const filtered = React.useMemo(() => {
+    const lvl = String(level ?? '').trim()
 
-  const filtered = itemsMeta.filter(item => {
-    if (!level) return true
-    if (level === 'kelimelerim') return item.owner === 'me'
-    return item.difficulty === level
-  })
+    // no level => flatten all groups
+    if (!lvl) return Object.values(items as Record<string, any[]>).flat()
+
+    // return the exact group if exists (kolay/orta/zor), otherwise empty
+    return (items as any)[lvl] ?? []
+  }, [items, level])
+
+  // show alert when selected level has no group in the static sets
+  React.useEffect(() => {
+    const lvl = String(level ?? '').trim()
+    if (!lvl) return
+
+    // explicit check for 'kelimelerim' or missing key in sets
+    const hasKey = Object.prototype.hasOwnProperty.call(items, lvl)
+    if (lvl === 'kelimelerim' || !hasKey) {
+      Alert.alert('Bilgi', 'Kelime yok, Kendi kelimelerinizi ekleyin.', [{ text: 'Tamam' }])
+    }
+  }, [level, items])
 
   const windowWidth = useWindowDimensions().width;
   const columns = 2;
@@ -35,8 +43,8 @@ export default function wordtests() {
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
       <Text style={styles.text}>Kelime Testleri</Text>
       <View style={styles.row}>
-        {filtered.map((it, i) => (
-          <TestComponent key={i} id={String(i)} name={it.name} style={{ width: itemWidth, height: itemWidth * 0.6 }} />
+        {filtered.map((it: any, i: number) => (
+          <TestComponent key={i} id={String(i)} name={it.title ?? it.name} style={{ width: itemWidth, height: itemWidth * 0.6 }} />
         ))}
       </View>
     </ScrollView>
