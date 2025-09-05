@@ -2,11 +2,22 @@ import { StyleSheet, Text, View, useWindowDimensions, ScrollView, Alert } from '
 import React from 'react'
 import TestComponent from '@/components/tests'
 import { useLocalSearchParams } from 'expo-router'
-
-import sets from '../../assets/data/words'
+import { useData } from '../lib/DataProvider'
 
 export default function wordtests() {
   const { level } = useLocalSearchParams() // 'kolay' | 'orta' | 'zor' | 'kelimelerim'
+
+  // use DataProvider as single source of truth
+  const { data, loading } = useData()
+  const sets = data?.sets ?? {}
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FAFDD6' }}>
+        <Text>Yükleniyor...</Text>
+      </View>
+    )
+  }
 
   const items = sets
   console.log('level', level);
@@ -40,11 +51,11 @@ export default function wordtests() {
   const itemWidth = (windowWidth - horizontalPadding - gapBetween * (columns - 1)) / columns;
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#FAFDD6' }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
       <Text style={styles.text}>Kelime Testleri</Text>
       <View style={styles.row}>
-        {filtered.map((it: any, i: number) => (
-          <TestComponent key={i} id={String(i)} name={it.title ?? it.name} style={{ width: itemWidth, height: itemWidth * 0.6 }} />
+        {filtered.map((it: any) => (
+          <TestComponent key={it.id} id={it.id} name={it.title ?? it.name} style={{ width: itemWidth, height: itemWidth * 0.6 }} />
         ))}
       </View>
     </ScrollView>
@@ -56,6 +67,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#FAFDD6',
+        padding: 20,
     },
     row: {
       width: '100%',

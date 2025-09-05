@@ -16,7 +16,7 @@ export default function TestComponent({ id, name, style, star = 0 }: Props) {
   return (
     <TouchableOpacity
       style={[styles.container, style]}
-      onPress={() => router.push(`/tests?set=${encodeURIComponent(id)}`)}
+      onPress={() => router.push(`/tests?setId=${encodeURIComponent(id)}`)}
     >
       <Text>{name}</Text>
 
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     margin: 10,
     height: 100,
     width: 200,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#AED6CF',
     padding: 10,
     borderWidth: 1,
     borderColor: '#ccc',

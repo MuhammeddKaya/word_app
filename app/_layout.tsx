@@ -1,10 +1,13 @@
 import { Stack } from 'expo-router';
+import DataProvider from './lib/DataProvider';
 
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="wordtests" />
-      <Stack.Screen name="favorites" />
-    </Stack>
+    <DataProvider>
+      <Stack>
+        <Stack.Screen name="wordtests" />
+        <Stack.Screen name="favorites" />
+      </Stack>
+    </DataProvider>
   );
 }

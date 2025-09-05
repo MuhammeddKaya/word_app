@@ -44,7 +44,7 @@ export default function HomeScreen({}) {
       </TouchableOpacity>
     </SafeAreaView>
   )
-}
+} 
 
 const ACCENT = '#647FBC'
 const BG = '#FAFDD6'
