@@ -4,7 +4,7 @@
     "slug": "word_app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/wordifyikon.png",
+    "icon": "./assets/images/wordify.png",
     "scheme": "wordapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -29,7 +29,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/wordifylogopreview.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
