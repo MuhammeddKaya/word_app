@@ -167,7 +167,7 @@ export default function Favorites() {
         </head>
         <body>
           <div class="header">
-            <h1 class="app-title">📚 Kelime Öğrenme Uygulaması</h1>
+            <h1 class="app-title">📚 Wordify</h1>
             <p class="subtitle">Favori Kelimelerim (${favoriteWords.length} kelime) - ${new Date().toLocaleDateString('tr-TR')}</p>
           </div>
           
@@ -185,7 +185,7 @@ export default function Favorites() {
           </div>
           
           <div class="footer">
-            <p>💙 Kelime Öğrenme Uygulaması • Toplam ${favoriteWords.length} favori kelime</p>
+            <p>💙 Wordify • Toplam ${favoriteWords.length} favori kelime</p>
           </div>
         </body>
         </html>

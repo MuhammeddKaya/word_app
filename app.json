@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/wordifyikon.png",
+        "foregroundImage": "./assets/images/wordify.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
