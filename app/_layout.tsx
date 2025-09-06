@@ -19,13 +19,12 @@ export default function RootLayout() {
     <DataProvider>
       <Stack
         screenOptions={{
-          headerTitle: '',
+          headerTitle: 'Wordify',
           headerBackTitleVisible: false,
           headerRight: () => <HeaderMenu />,
         }}
       >
-        <Stack.Screen name="wordtests" />
-        <Stack.Screen name="favorites" />
+
         {/* diğer ekranlar route dosyalarına göre burada yer alır */}
       </Stack>
     </DataProvider>
