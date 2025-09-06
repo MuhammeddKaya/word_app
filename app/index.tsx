@@ -39,7 +39,7 @@ export default function HomeScreen({}) {
         <Text style={styles.cardText}>Favori kelimeler</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.card, { height: 80 }]} onPress={() => router.push('/importwords')}>
+      <TouchableOpacity style={[styles.card, { height: 80 }]} onPress={() => router.push('/mywords')}>
         <Text style={styles.cardText}>Benim Kelimelerim</Text>
       </TouchableOpacity>
     </SafeAreaView>

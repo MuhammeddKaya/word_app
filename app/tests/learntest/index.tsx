@@ -19,33 +19,6 @@ export default function LearnTest() {
 
   const done = Number(selectedSet?.completedTests?.LearnTest ?? 0) > 0
 
-  React.useEffect(() => {
-    if (done) {
-      // opsiyonel: otomatik uyarı
-      Alert.alert('Bilgi', 'Bu setin Kelime Öğren testi daha önce tamamlanmış.')
-    }
-  }, [done])
-
-  if (loading || !sets) {
-    return (
-      <View style={styles.container}>
-        <Text>Yükleniyor...</Text>
-      </View>
-    )
-  }
-
-
-  if (!selectedSet) {
-    return (
-      <View style={styles.container}>
-        <Text>Set bulunamadı</Text>
-      </View>
-    )
-  }
-
-  const words = selectedSet.words ?? []
-  const current = words[index]
-
   const speakWord = (text?: string) => {
     if (!text) return
     try {
@@ -122,6 +95,26 @@ export default function LearnTest() {
     // sonra yeniden yükle/yeniden başlat
     setIndex(0)
   }
+
+  if (loading || !sets) {
+    return (
+      <View style={styles.container}>
+        <Text>Yükleniyor...</Text>
+      </View>
+    )
+  }
+
+
+  if (!selectedSet) {
+    return (
+      <View style={styles.container}>
+        <Text>Set bulunamadı</Text>
+      </View>
+    )
+  }
+
+  const words = selectedSet.words ?? []
+  const current = words[index]
 
   return (
     <View style={styles.container}>

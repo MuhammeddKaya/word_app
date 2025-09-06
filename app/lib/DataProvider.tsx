@@ -36,11 +36,9 @@ export default function DataProvider({ children }: { children: React.ReactNode }
       const info = await FileSystem.getInfoAsync(DEST_PATH)
       if (!info.exists) {
         // write bundled JSON to documentDirectory on first run
-        await FileSystem.writeAsStringAsync(DEST_PATH, JSON.stringify(bundleData, null, 2), { encoding: FileSystem.EncodingType.UTF8 })
+        await FileSystem.writeAsStringAsync(DEST_PATH, JSON.stringify(bundleData, null, 2))
       }
-    } catch (e) {
-      console.warn('ensureWritable error', e)
-    }
+    } catch (e) { /* ... */ }
   }
 
   async function load() {
@@ -57,7 +55,7 @@ export default function DataProvider({ children }: { children: React.ReactNode }
     }
   }
 
-  async function save(next: any) {
+  async function saveData(next: any) {
     try {
       setData(next)
       await FileSystem.writeAsStringAsync(DEST_PATH, JSON.stringify(next, null, 2), { encoding: FileSystem.EncodingType.UTF8 })
@@ -73,7 +71,7 @@ export default function DataProvider({ children }: { children: React.ReactNode }
       Object.keys(next.sets).forEach(k => {
         next.sets[k] = (next.sets[k] as any[]).map((s: any) => s.id === updatedSet.id ? updatedSet : s)
       })
-      await save(next)
+      await saveData(next)
     } catch (e) {
       console.warn('updateSet error', e)
     }
@@ -92,7 +90,7 @@ export default function DataProvider({ children }: { children: React.ReactNode }
         setId,
         addedAt: new Date().toISOString()
       })
-      await save(next)
+      await saveData(next)
     }
   }
 
@@ -102,7 +100,7 @@ export default function DataProvider({ children }: { children: React.ReactNode }
     if (!next.favorites) next.favorites = []
     
     next.favorites = next.favorites.filter((f: any) => f.wordId !== wordId)
-    await save(next)
+    await saveData(next)
   }
 
   function isFavorite(wordId: string): boolean {
@@ -110,10 +108,164 @@ export default function DataProvider({ children }: { children: React.ReactNode }
     return data.favorites.some((f: any) => f.wordId === wordId)
   }
 
+  // helpers for "kelimelerim" (my words)
+  function makeMySetId(counter: number) {
+    return `kelimelerim-set-${counter}`
+  }
+
+  // helper: create new "Kelimelerim" set
+  function createMySet(title?: string) {
+    const id = `kelimelerim-set-${Date.now()}-${Math.floor(Math.random()*999)}`
+    return {
+      id,
+      title: title ?? `Kelimelerim Set ${new Date().toLocaleDateString()}`,
+      totalWords: 0,
+      completedCount: 0,
+      learnedCount: 0,
+      lastReviewed: null,
+      completedTests: { LearnTest: 0, MatchTest: 0, TranslateTest: 0, FillTest: 0 },
+      stars: 0,
+      createdAt: new Date().toISOString(),
+      words: []
+    }
+  }
+
+  async function addMyWord(wordObj: { word: string, meaning?: string, example?: string, tags?: string[] }) {
+    if (!data) throw new Error('Data not loaded')
+    const next = { ...data }
+    next.sets = next.sets || {}
+    const groupKey = 'kelimelerim'
+    next.sets[groupKey] = next.sets[groupKey] ?? []
+
+    // find last set with <10 words
+    let targetSet = (next.sets[groupKey] as any[]).find((s: any) => (s.words?.length ?? 0) < 10)
+    if (!targetSet) {
+      targetSet = createMySet(`Kelimelerim Set ${((next.sets[groupKey] as any[]).length ?? 0) + 1}`)
+      next.sets[groupKey].push(targetSet)
+    }
+    const wid = `myw-${Date.now()}`
+    const w = { id: wid, word: wordObj.word, meaning: wordObj.meaning ?? '', example: wordObj.example ?? '', tags: wordObj.tags ?? [] }
+    targetSet.words = targetSet.words ?? []
+    targetSet.words.push(w)
+    targetSet.totalWords = targetSet.words.length
+
+    await saveData(next)
+    setData(next)
+    return w
+  }
+
+  // import .xlsx or .csv from given uri (DocumentPicker uri)
+  async function importMyWordsFromExcel(uri: string) {
+    if (!data) throw new Error('Data not loaded')
+    try {
+      const lower = String(uri).toLowerCase()
+      let rows: any[] = []
+
+      if (lower.endsWith('.csv') || lower.includes('text/csv')) {
+        // read as UTF8 text
+        const txt = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.UTF8 })
+        const lines = txt.split(/\r?\n/).map(l => l.trim()).filter(Boolean)
+        // assume first line header
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i]
+          // simple CSV parse handling quoted fields
+          const cols: string[] = []
+          let cur = ''
+          let inQ = false
+          for (let ch of line) {
+            if (ch === '"' ) { inQ = !inQ; continue }
+            if (ch === ',' && !inQ) {
+              cols.push(cur.trim()); cur = ''; continue
+            }
+            cur += ch
+          }
+          if (cur !== '') cols.push(cur.trim())
+          rows.push(cols)
+        }
+      } else {
+        // try as xlsx/xls - read as base64
+        const b64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 })
+        const XLSX = require('xlsx')
+        const wb = XLSX.read(b64, { type: 'base64' })
+        const sheet = wb.Sheets[wb.SheetNames[0]]
+        rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) // array of arrays
+        // remove header row
+        if (rows.length > 0) rows = rows.slice(1)
+      }
+
+      // normalize rows => { word, meaning, example }
+      const items: { word:string, meaning:string, example:string }[] = []
+      for (const r of rows) {
+        if (!r || r.length === 0) continue
+        const word = String(r[0] ?? '').trim()
+        if (!word) continue
+        const meaning = String(r[1] ?? '').trim()
+        const example = String(r[2] ?? '').trim()
+        items.push({ word, meaning, example })
+      }
+
+      if (items.length === 0) return { imported: 0 }
+
+      // insert into data.sets.kelimelerim as 10-per-set
+      const next = { ...data }
+      next.sets = next.sets ?? {}
+      next.sets.kelimelerim = next.sets.kelimelerim ?? []
+
+      let currentSet = (next.sets.kelimelerim as any[]).find((s:any) => (s.words?.length ?? 0) < 10)
+      for (const it of items) {
+        if (!currentSet) {
+          currentSet = createMySet(`Kelimelerim Set ${(next.sets.kelimelerim as any[]).length + 1}`)
+          next.sets.kelimelerim.push(currentSet)
+        }
+        const wid = `myw-${Date.now()}-${Math.floor(Math.random()*999)}`
+        currentSet.words = currentSet.words ?? []
+        currentSet.words.push({ id: wid, word: it.word, meaning: it.meaning, example: it.example, tags: [] })
+        currentSet.totalWords = currentSet.words.length
+        if (currentSet.words.length >= 10) currentSet = null as any
+      }
+
+      await saveData(next)
+      // ensure local state updated
+      setData(next)
+      return { imported: items.length }
+    } catch (e) {
+      console.warn('importMyWordsFromExcel error', e)
+      throw e
+    }
+  }
+
+  async function removeMySet(setId: string) {
+    if (!data) return
+    const next = { ...data }
+    try {
+      Object.keys(next.sets || {}).forEach(k => {
+        next.sets[k] = (next.sets[k] as any[]).filter((s: any) => s.id !== setId)
+      })
+      await saveData(next)
+      setData(next)
+    } catch (e) {
+      console.warn('removeMySet error', e)
+    }
+  }
+
   useEffect(() => { load() }, [])
 
+  // at the end of provider value expose new functions
   return (
-    <DataContext.Provider value={{ data, loading, reload: load, saveData: save, updateSet, addToFavorites, removeFromFavorites, isFavorite }}>
+    <DataContext.Provider value={{
+      data,
+      loading,
+      reload: load,
+      saveData,
+      updateSet,
+      addToFavorites,
+      removeFromFavorites,
+      isFavorite,
+      // new:
+      addMyWord,
+      importMyWordsFromExcel,
+      removeMySet,
+    }}>
       {children}
     </DataContext.Provider>
   )

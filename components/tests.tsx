@@ -2,6 +2,7 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View, Text, ViewStyle, TouchableOpacity } from 'react-native';
+import { useData } from '../app/lib/DataProvider';
 
 type Props = {
   id: string;
@@ -10,8 +11,20 @@ type Props = {
   star?: number;
 };
 
-export default function TestComponent({ id, name, style, star = 0 }: Props) {
+export default function TestComponent({ id, name, style, star }: Props) {
   const router = useRouter();
+  const { data } = useData();
+
+  // compute stars from completedTests if star prop not provided
+  const computedStar = React.useMemo(() => {
+    if (typeof star === 'number') return Math.max(0, Math.min(4, star));
+    const sets = data?.sets ?? {};
+    const all = Object.values(sets as Record<string, any[]>).flat();
+    const s = all.find((x: any) => x.id === id);
+    const tests = s?.completedTests ?? {};
+    const done = Object.values(tests).filter((v: any) => Number(v) > 0).length;
+    return Math.min(4, done);
+  }, [data, id, star]);
 
   return (
     <TouchableOpacity
@@ -21,8 +34,8 @@ export default function TestComponent({ id, name, style, star = 0 }: Props) {
       <Text>{name}</Text>
 
       <View style={styles.starsRow}>
-        {Array.from({ length: 5 }).map((_, i) => {
-          const filled = i < star;
+        {Array.from({ length: 4 }).map((_, i) => {
+          const filled = i < computedStar;
           return (
             <Ionicons
               key={i}
