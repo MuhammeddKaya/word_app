@@ -12,7 +12,8 @@ export default function HomeScreen({}) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Text style={styles.logoText}>Kelime Ezberle</Text>
+        <Image source={require('../assets/images/wordifyikon.png')} style={{ width: windowHeight * 0.18, height: windowHeight * 0.16, marginBottom: 12 }} />
+        {/* <Text style={styles.logoText}>Wordify </Text> */}
       </View>
 
       <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     backgroundColor: BG,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20 },
+    padding: 10 },
 
   logoBox: { 
     width: '70%',
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: ACCENT,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 12,
+    marginVertical: 10,
     borderRadius: 12 },
 
   cardText: { 
