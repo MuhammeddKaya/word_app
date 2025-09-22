@@ -157,7 +157,8 @@ export default function MatchTest() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{selectedSet.title} - Eşleştir</Text>
+      <Text style={styles.title}>{selectedSet.title}</Text>
+      <Text style={styles.title}>Eşleştirme Testi</Text>
       <View style={styles.area}>
         <View style={styles.column}>
           {leftItems.map((it, idx) => renderItem(it, true, idx))}
@@ -181,5 +182,5 @@ const styles = StyleSheet.create({
   itemSelected: { borderWidth: 2, borderColor: '#647FBC' },
   itemMatched: { backgroundColor: '#d3f9d8', opacity: 0.9 },
   itemWrong: { backgroundColor: '#ffd6d6', borderColor: '#ff4d4f', borderWidth: 2 },
-  hint: { marginTop: 12, color: '#333' },
+  hint: { marginTop: 12, color: '#333', fontStyle: 'italic', textAlign: 'center', paddingVertical: 28 },
 })

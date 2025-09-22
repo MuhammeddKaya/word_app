@@ -39,8 +39,33 @@ export default function wordtests() {
 
     // explicit check for 'kelimelerim' or missing key in sets
     const hasKey = Object.prototype.hasOwnProperty.call(items, lvl)
-    if (lvl === 'kelimelerim' || !hasKey) {
-      Alert.alert('Bilgi', 'Kelime yok, Kendi kelimelerinizi ekleyin.', [{ text: 'Tamam' }])
+
+    if (!hasKey) {
+      Alert.alert('Dikkat', 'Bu kategoriyi kendi eklediğiniz kelimeleri öğrenmeniz için hazırlanmıştır. Öğrenmek istediğiniz kelimeleri anasayfada Benim Kelimelerim alanından ekleyebilirsiniz.', [{ text: 'Tamam' }])
+    } else {
+      const group = items[lvl]
+      // toplam kelime sayısını hesapla (setler halinde veya düz kelime listesi olabilir)
+      let totalWords = 0
+
+      if (Array.isArray(group)) {
+        // eğer dizi setlerden oluşuyorsa (her set.words içerir) toplamı al
+        if (group.length > 0 && typeof group[0] === 'object' && Array.isArray(group[0].words)) {
+          totalWords = group.reduce((acc: number, s: any) => acc + (s.words?.length ?? 0), 0)
+        } else {
+          // düz kelime listesi
+          totalWords = group.length
+        }
+      } else if (group && typeof group === 'object') {
+        // olası obje yapılar için basit toplam (her değer bir dizi ise)
+        totalWords = Object.values(group).reduce((acc: number, v: any) => {
+          if (Array.isArray(v)) return acc + v.length
+          return acc
+        }, 0)
+      }
+
+      if (totalWords === 0) {
+        Alert.alert('Dikkat', 'Bu kategoriyi kendi eklediğiniz kelimeleri öğrenmeniz için hazırlanmıştır. Öğrenmek istediğiniz kelimeleri anasayfada Benim Kelimelerim alanından ekleyebilirsiniz.', [{ text: 'Tamam' }])
+      }
     }
   }, [level, items])
 

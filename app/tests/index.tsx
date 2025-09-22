@@ -52,7 +52,11 @@ export default function Tests(list: any,) {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.card} onPress={() => router.push(`/tests/filltest?setId=${encodeURIComponent(String(setId ?? ''))}`)}>
-        <Text style={styles.cardText}>Boşluk Doldur</Text>
+        <Text style={styles.cardText}>Kelime Tamamlama</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.card} onPress={() => router.push(`/tests/sentencetest?setId=${encodeURIComponent(String(setId ?? ''))}`)}>
+        <Text style={styles.cardText}>Cümle Tamamlama</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )
