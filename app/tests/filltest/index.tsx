@@ -32,6 +32,8 @@ export default function FillTest() {
   // focused character position (actual index in the word) or null
   const [focusedPos, setFocusedPos] = React.useState<number | null>(null)
   const [wrongVisible, setWrongVisible] = React.useState<Record<number, boolean>>({})
+  const [showAnswer, setShowAnswer] = React.useState(false)
+  const [lastFilled, setLastFilled] = React.useState<number | null>(null)
   const hiddenInputRef = React.useRef<any>(null)
 
   React.useEffect(() => {
@@ -114,24 +116,9 @@ export default function FillTest() {
       // no remaining hidden slots for this word
       const allFilledNow = hiddenIndices.every(i => updated[i] !== '_')
       if (allFilledNow) {
-        if (index < words.length - 1) {
-          // advance to next word; effect will reinitialize state
-          setIndex(i => i + 1)
-          return
-        }
-
-        // last word completed -> persist completion
-        try {
-          if (!selectedSet.completedTests) selectedSet.completedTests = { LearnTest: 0, MatchTest: 0, TranslateTest: 0, FillTest: 0 }
-          selectedSet.completedTests.FillTest = 1
-          const completedCount = Object.values(selectedSet.completedTests).filter((v: any) => Number(v) > 0).length
-          selectedSet.stars = Math.min(4, completedCount)
-          await updateSet(selectedSet)
-          Alert.alert('Tebrikler', 'Fill testi tamamlandı', [{ text: 'Tamam', onPress: () => router.back() }])
-        } catch (e) {
-          console.warn('Fill finish error', e)
-          Alert.alert('Hata', 'Test tamamlanırken hata oluştu')
-        }
+        setShowAnswer(true)
+        setLastFilled(index)
+        // OTO GEÇMEYİ KALDIRDIK, kullanıcı Sonraki/Bitir butonuna basınca ilerleyecek
       }
     } else {
       // wrong: flash that position
@@ -155,7 +142,6 @@ export default function FillTest() {
 
            {current ? (
              <View style={styles.card}>
-               <Text style={styles.hint}>Türkçesi:</Text>
                <Text style={styles.meaning}>{current.meaning}</Text>
 
                <Text style={styles.maskLabel}>Tamamlayın:</Text>
@@ -168,7 +154,6 @@ export default function FillTest() {
                      <TouchableOpacity key={`c-${i}`} onPress={() => {
                        if (!isHidden) return
                        setFocusedPos(i)
-                       // focus invisible input with slight delay to ensure keyboard opens
                        setTimeout(() => { try { hiddenInputRef.current?.focus() } catch (e) {} }, 60)
                      }} activeOpacity={0.8}>
                        <View style={[styles.charBox, isHidden && styles.charHidden, wrong && styles.charWrong, focused && styles.charFocused]}>
@@ -179,19 +164,22 @@ export default function FillTest() {
                  })}
                </View>
 
-               {/* hidden input to capture keystrokes and type directly onto chars */}
-               {/* Make it small but focusable (not zero-size) so soft keyboard reliably opens. */}
+               {showAnswer && (
+                 <Text style={styles.answer}>
+                   Doğru cevap: <Text style={{ fontWeight: 'bold' }}>{current.word}</Text>
+                 </Text>
+               )}
+
                <TextInput
                  ref={hiddenInputRef}
                  value={input}
                  onChangeText={(t) => {
                    const char = t.slice(-1)
                    setInput('')
-                   if (focusedPos !== null) handleLetterEntryAt(focusedPos, char)
+                   if (focusedPos !== null && !showAnswer) handleLetterEntryAt(focusedPos, char)
                  }}
                  onKeyPress={({ nativeEvent }) => {
-                   if (nativeEvent.key === 'Backspace' && focusedPos !== null) {
-                     // clear focused position
+                   if (nativeEvent.key === 'Backspace' && focusedPos !== null && !showAnswer) {
                      setDisplayChars(dc => { const n = [...dc]; n[focusedPos] = '_'; return n })
                    }
                  }}
@@ -199,21 +187,38 @@ export default function FillTest() {
                  autoCapitalize="none"
                  autoCorrect={false}
                  maxLength={1}
+                 blurOnSubmit={false}
                />
 
                <View style={styles.controls}>
-                 <TouchableOpacity onPress={goPrev} disabled={index === 0} style={[styles.btn, index === 0 && styles.disabled]}>
+                 <TouchableOpacity onPress={goPrev} disabled={index === 0 || showAnswer} style={[styles.btn, (index === 0 || showAnswer) && styles.disabled]}>
                    <Text>Önceki</Text>
                  </TouchableOpacity>
-                 <TouchableOpacity onPress={() => {
-                   // manual advance if all filled
-                   if (!allFilled) return
-                   if (index < words.length - 1) setIndex(i => i + 1)
-                   else {
-                     // finish already handled on fill, but keep fallback
-                     router.back()
-                   }
-                 }} disabled={!allFilled} style={[styles.btn, !allFilled && styles.disabled]}>
+                 <TouchableOpacity
+                   onPress={async () => {
+                     if (!allFilled || !showAnswer) return
+                     if (index < words.length - 1) {
+                       setShowAnswer(false)
+                       setLastFilled(null)
+                       setIndex(i => i + 1)
+                     } else {
+                       // son kelime tamamlandı -> persist completion
+                       try {
+                         if (!selectedSet.completedTests) selectedSet.completedTests = { LearnTest: 0, MatchTest: 0, TranslateTest: 0, FillTest: 0 }
+                         selectedSet.completedTests.FillTest = 1
+                         const completedCount = Object.values(selectedSet.completedTests).filter((v: any) => Number(v) > 0).length
+                         selectedSet.stars = Math.min(4, completedCount)
+                         await updateSet(selectedSet)
+                         Alert.alert('Tebrikler', 'Fill testi tamamlandı', [{ text: 'Tamam', onPress: () => router.back() }])
+                       } catch (e) {
+                         console.warn('Fill finish error', e)
+                         Alert.alert('Hata', 'Test tamamlanırken hata oluştu')
+                       }
+                     }
+                   }}
+                   disabled={!allFilled || !showAnswer}
+                   style={[styles.btn, (!allFilled || !showAnswer) && styles.disabled]}
+                 >
                    <Text>{index < words.length - 1 ? 'Sonraki' : 'Bitir'}</Text>
                  </TouchableOpacity>
                </View>
@@ -233,7 +238,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 20, fontWeight: '700', marginBottom: 8 },
   progress: { marginBottom: 10 },
   card: { width: '100%', backgroundColor: '#fff', padding: 16, borderRadius: 8 },
-  wordRow: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' },
+  wordRow: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 18 },
   charBox: { minWidth: 28, minHeight: 36, margin: 4, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#fff' },
   charHidden: { borderWidth: 1, borderColor: '#ccc', backgroundColor: '#f7f7f7' },
   charFocused: { borderColor: '#647FBC', borderWidth: 2 },
@@ -241,12 +246,18 @@ const styles = StyleSheet.create({
   charWrong: { backgroundColor: '#ffd6d6', borderColor: '#ff4d4f', borderWidth: 1 },
   letterInput: { width: 64, height: 44, borderWidth: 1, borderColor: '#ccc', borderRadius: 6, textAlign: 'center', fontSize: 18, marginBottom: 12 },
   hiddenInput: { position: 'absolute', bottom: 8, left: 12, opacity: 0.02, height: 40, width: 48 },
-  hint: { color: '#333', fontWeight: '600', marginBottom: 4 },
-  meaning: { fontSize: 18, color: '#111', marginBottom: 12 },
-  maskLabel: { marginTop: 8, color: '#333' },
+  meaning: { fontSize: 22, color: '#111', marginBottom: 12 , textAlign: 'center', fontWeight: 'bold' },
+  maskLabel: { margin: 12, color: '#333' },
   masked: { fontSize: 28, letterSpacing: 2, textAlign: 'center', marginVertical: 8 },
   input: { borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 6, backgroundColor: '#fff', marginBottom: 12 },
   controls: { flexDirection: 'row', justifyContent: 'space-between' },
   btn: { padding: 12, backgroundColor: '#647FBC', borderRadius: 8, minWidth: 120, alignItems: 'center' },
   disabled: { opacity: 0.5 },
+  answer: {
+    color: '#388E3C',
+    fontWeight: '600',
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center'
+  }
 })

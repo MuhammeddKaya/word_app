@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Imag
 import React, { useState }   from 'react'
 import { Picker } from '@react-native-picker/picker'; 
 import {Link, useRouter} from 'expo-router'
-
+import { BannerAd, BannerAdSize, TestIds, InterstitialAd } from 'react-native-google-mobile-ads';
 
 export default function HomeScreen({}) {
   const windowHeight = useWindowDimensions().height;

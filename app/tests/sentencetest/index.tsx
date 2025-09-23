@@ -57,7 +57,7 @@ export default function SentenceTest() {
   try {
     const re = new RegExp(`\\b${escapeRegExp(expected)}\\b`, 'i')
     if (re.test(exampleRaw)) {
-      masked = exampleRaw.replace(re, '____')
+      masked = exampleRaw.replace(re, '_________')
     } else {
       // fallback: replace first occurrence of the longest token that contains expected (loose)
       const looseRe = new RegExp(escapeRegExp(expected), 'i')
@@ -150,8 +150,8 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: '700' },
   progress: { color: '#666', marginTop: 6 },
   card: { width: '100%', backgroundColor: '#fff', padding: 16, borderRadius: 8 },
-  hint: { color: '#666', marginBottom: 8 },
-  sentence: { fontSize: 16, marginBottom: 12, color: '#111' },
+  hint: { color: '#666', marginBottom: 20 },
+  sentence: { fontSize: 16, marginBottom: 24, color: '#111', alignItems: 'center', textAlign: 'center', fontWeight: 'bold' },
   input: { borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 6, marginBottom: 12, backgroundColor: '#fff' },
   controls: { flexDirection: 'row', justifyContent: 'space-between' },
   btn: { padding: 12, backgroundColor: '#647FBC', borderRadius: 8, minWidth: 120, alignItems: 'center' },

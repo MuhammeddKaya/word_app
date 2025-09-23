@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, Alert, StyleSheet, ScrollView } from 'react-native'
+import { SafeAreaView, View, Text, TouchableOpacity, Alert, StyleSheet, ScrollView, Image } from 'react-native'
 import * as DocumentPicker from 'expo-document-picker'
 import * as FileSystem from 'expo-file-system'
 import * as Sharing from 'expo-sharing'
@@ -87,24 +87,22 @@ export default function ImportMyWords() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View style={styles.header}>
-          <Text style={styles.title}>Excel / CSV ile Toplu Ekleme</Text>
-          <Text style={styles.subtitle}>Şablon: ingilizce_kelime, turkce_kelime, ornek_cumle</Text>
+          <Text style={styles.title}>Excel İle Toplu Kelime Ekleme</Text>
         </View>
 
         <View style={styles.templateBox}>
-          <Text style={styles.templateTitle}>Örnek satır</Text>
-          <Text style={styles.templateLine}>ingilizce_kelime,turkce_kelime,ornek_cumle</Text>
-          <Text style={styles.templateLine}>abundant,"bol, çok","The region has abundant rainfalls in spring."</Text>
+          <Text style={styles.templateTitle}>Örnek Resim</Text>
+          <Image source={require('../../assets/images/sablon.png')} style={{ width: '100%', height: 150, resizeMode: 'contain', marginBottom: 8 }} />
 
           <TouchableOpacity style={styles.templateBtn} onPress={downloadTemplate}>
             <Ionicons name="download" size={16} color="#fff" />
             <Text style={styles.templateBtnText}>Şablonu İndir (.xlsx)</Text>
           </TouchableOpacity>
 
-          <Text style={styles.note}>Not: İlk satır başlık olmalıdır. .xlsx veya .csv kabul edilir.</Text>
+          <Text style={styles.note}>Not: İlk satır başlık olmalıdır. </Text>
         </View>
 
-        <View style={{ flexDirection: 'row', marginTop: 12 }}>
+        <View style={{ flexDirection: 'row', marginTop: 12, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity style={styles.actionBtn} onPress={pick} disabled={loading}>
             <Ionicons name="cloud-upload" size={18} color="#fff" />
             <Text style={styles.actionText}>{loading ? 'Yükleniyor...' : 'Dosya Seç & Yükle'}</Text>
@@ -127,16 +125,16 @@ export default function ImportMyWords() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FAF9FF' },
   header: { paddingHorizontal: 16, paddingTop: 16 },
-  title: { fontSize: 20, fontWeight: '700', color: '#222' },
+  title: { fontSize: 20, fontWeight: '700', color: '#222', textAlign: 'center' },
   subtitle: { color: '#666', marginTop: 6 },
 
-  templateBox: { backgroundColor: '#fff', margin: 16, padding: 12, borderRadius: 8, borderWidth: 1, borderColor: '#eee' },
+  templateBox: { backgroundColor: '#fff', margin: 4, padding: 6, borderRadius: 8, borderWidth: 1, borderColor: '#eee' },
   templateTitle: { fontWeight: '700', marginBottom: 6 },
   templateLine: { fontFamily: 'monospace', color: '#222', marginBottom: 4 },
   note: { color: '#666', marginTop: 8, fontSize: 12 },
 
-  templateBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#647FBC', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 6, marginTop: 8 },
-  templateBtnText: { color: '#fff', fontWeight: '700', marginLeft: 8 },
+  templateBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#647FBC', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 6, marginTop: 8, alignItems: 'center', justifyContent: 'center' },
+  templateBtnText: { color: '#fff', fontWeight: '700', marginLeft: 8},
 
   actionBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4CA3A3', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 8, marginRight: 8 },
   actionText: { color: '#fff', fontWeight: '700', marginLeft: 8 },
