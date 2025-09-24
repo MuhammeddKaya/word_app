@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import DataProvider from './lib/DataProvider';
@@ -8,9 +8,14 @@ import DataProvider from './lib/DataProvider';
 function HeaderMenu() {
   const router = useRouter();
   return (
-    <TouchableOpacity style={styles.btn} onPress={() => router.push('/about')}>
-      <Ionicons name="information-circle-outline" size={22} color="#333" />
-    </TouchableOpacity>
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <TouchableOpacity style={styles.btn} onPress={() => router.push('/about')}>
+        <Ionicons name="information-circle-outline" size={22} color="#333" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.btn} onPress={() => router.push('/settings')}>
+        <Ionicons name="settings-outline" size={22} color="#333" />
+      </TouchableOpacity>
+    </View>
   );
 }
 

@@ -248,6 +248,51 @@ export default function DataProvider({ children }: { children: React.ReactNode }
     }
   }
 
+
+  async function wipeProgressOnly() {
+    try {
+      const info = await FileSystem.getInfoAsync(DEST_PATH);
+      if (!info.exists) {
+        // Dosya yoksa yapılacak bir şey yok
+        return;
+      }
+
+      let json = await FileSystem.readAsStringAsync(DEST_PATH);
+      let parsed = JSON.parse(json);
+
+      // Favorileri temizle
+      parsed.favorites = [];
+
+      // Tüm setlerde ilerleme alanlarını sıfırla
+      Object.values(parsed.sets).forEach((setGroup: any) => {
+        setGroup.forEach((set: any) => {
+          set.completedCount = 0;
+          set.learnedCount = 0;
+          set.lastReviewed = null;
+          set.stars = 0;
+          set.completedTests = {
+            LearnTest: 0,
+            MatchTest: 0,
+            TranslateTest: 0,
+            FillTest: 0,
+            SentenceTest: 0
+          };
+          if (Array.isArray(set.words)) {
+            set.words.forEach((w: any) => {
+              w.learned = false;
+              w.star = 0;
+            });
+          }
+        });
+      });
+
+      await FileSystem.writeAsStringAsync(DEST_PATH, JSON.stringify(parsed, null, 2));
+      setData(parsed);
+    } catch (e) {
+      console.warn('wipeProgressOnly error', e);
+    }
+  }
+
   useEffect(() => { load() }, [])
 
   // at the end of provider value expose new functions
@@ -265,6 +310,7 @@ export default function DataProvider({ children }: { children: React.ReactNode }
       addMyWord,
       importMyWordsFromExcel,
       removeMySet,
+      wipeProgressOnly,
     }}>
       {children}
     </DataContext.Provider>
