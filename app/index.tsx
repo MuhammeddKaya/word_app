@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Image, useWindowDimensions,  } from 'react-native';
 import React, { useState }   from 'react'
-import { Picker } from '@react-native-picker/picker'; 
+// Picker removed — replaced by level cards
 import {Link, useRouter} from 'expo-router'
 import { BannerAd, BannerAdSize, TestIds, InterstitialAd } from 'react-native-google-mobile-ads';
 
@@ -12,43 +12,86 @@ export default function HomeScreen({}) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Image source={require('../assets/images/wordifyikon.png')} style={{ width: windowHeight * 0.18, height: windowHeight * 0.16, marginBottom: 12 }} />
-        {/* <Text style={styles.logoText}>Wordify </Text> */}
-      </View>
+        {/* <Image source={require('../assets/images/wordifyikon.png')} style={{ width: windowHeight * 0.18, height: windowHeight * 0.16, marginBottom: 12 }} />
+        <Text style={styles.logoText}>Wordify </Text> */}
 
-      <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-        <Text style={{ marginRight: 12, fontSize: 18 }}>Seviye</Text>
-        <View style={{ borderWidth: 1, borderColor: ACCENT, borderRadius: 8, overflow: 'hidden' }}>
-          <Picker
-            onValueChange={(value) => setLevel(value as 'kolay' | 'orta' | 'zor' | 'kelimelerim')}
-            mode="dropdown"
-            style={{ height: 60, width: 160, backgroundColor: ACCENT, color: '#fff', alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Picker.Item label="Kolay" value="kolay" />
-            <Picker.Item label="Orta" value="orta" />
-            <Picker.Item label="Zor" value="zor" />
-            <Picker.Item label="Kelimelerim" value="kelimelerim" />
-          </Picker>
+        <Text style={{ marginBottom: 8, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Seviye</Text>
+        <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+          <View style={styles.levelContainer}>
+            <TouchableOpacity
+              style={styles.levelCard}
+              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('kolay')}`)}
+            >
+              <View style={styles.cardLeftIconWrapper}>
+                <Image source={require('../assets/images/wordify.png')} style={styles.levelCardImageLeft} />
+              </View>
+              <View style={styles.cardRightTextWrapper}>
+                <Text style={styles.levelCardText}>Kolay</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.levelCard}
+              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('orta')}`)}
+            >
+              <View style={styles.cardLeftIconWrapper}>
+                <Image source={require('../assets/images/sablon.png')} style={styles.levelCardImageLeft} />
+              </View>
+              <View style={styles.cardRightTextWrapper}>
+                <Text style={styles.levelCardText}>Orta</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.levelCard}
+              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('zor')}`)}
+            >
+              <View style={styles.cardLeftIconWrapper}>
+                <Image source={require('../assets/images/wordifyikon.png')} style={styles.levelCardImageLeft} />
+              </View>
+              <View style={styles.cardRightTextWrapper}>
+                <Text style={styles.levelCardText}>Zor</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.levelCard}
+              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('kelimelerim')}`)}
+            >
+              <View style={styles.cardLeftIconWrapper}>
+                <Image source={require('../assets/images/wordify.png')} style={styles.levelCardImageLeft} />
+              </View>
+              <View style={styles.cardRightTextWrapper}>
+                <Text style={styles.levelCardText}>Benim Kelimelerim</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
+
+        <Text style={{ marginBottom: 8, marginTop: 12, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Favori kelimeler</Text>
+        <TouchableOpacity style={styles.infoCard} onPress={() => router.push('/favorites')}>
+          <View style={styles.infoCardLeft}>
+            <Text style={styles.infoCardTitle}>Favorite Words</Text>
+            <Text style={styles.infoCardSubtitle}>Review your favorite words</Text>
+          </View>
+          <Image source={require('../assets/images/wordifyikon.png')} style={styles.infoCardImage} />
+        </TouchableOpacity>
+
+        <Text style={{ marginBottom: 8, marginTop: 12, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Kelime Ekle</Text>
+        <TouchableOpacity style={styles.infoCard} onPress={() => router.push('/mywords')}>
+          <View style={styles.infoCardLeft}>
+            <Text style={styles.infoCardTitle}>Import</Text>
+            <Text style={styles.infoCardSubtitle}>Import your own words</Text>
+          </View>
+          <Image source={require('../assets/images/sablon.png')} style={styles.infoCardImage} />
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.card} onPress={() => router.push(`/wordtests?level=${encodeURIComponent(level)}`)}>
-        <Text style={styles.cardText}>Testler</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.card} onPress={() => router.push('/favorites')}>
-        <Text style={styles.cardText}>Favori kelimeler</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={[styles.card, { height: 80 }]} onPress={() => router.push('/mywords')}>
-        <Text style={styles.cardText}>Benim Kelimelerim</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   )
 } 
 
 const ACCENT = '#647FBC'
-const BG = '#FAFDD6'
+const BG = '#ffffffff'
 
 const styles = StyleSheet.create({
   container: { 
@@ -86,9 +129,114 @@ const styles = StyleSheet.create({
     borderRadius: 12 },
 
   cardText: { 
-    color: '#ffffff',
+    color: '#020202ff',
     fontSize: 20,
     textAlign: 'center' },
+
+  levelContainer: {
+    width: '90%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+
+  levelCard: {
+    flexDirection: 'row',
+    width: '48%',
+    height: 72,
+    marginVertical: 6,
+    backgroundColor: '#ffffff',
+    borderWidth: 0.8,
+    borderColor: 'grey',
+    borderRadius: 12,
+  },
+
+  cardLeftIconWrapper: {
+    width: 56,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffffff',
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
+  },
+
+  levelCardImageLeft: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
+
+  cardRightTextWrapper: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 12,
+  },
+
+  levelCardText: {
+    color: '#111111ff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  cardLeft: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 12,
+  },
+
+  cardRight: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 12,
+  },
+
+  levelCardSubtitle: {
+    color: '#ffffff',
+    fontSize: 12,
+    marginTop: 4,
+  },
+
+  infoCard: {
+    width: '90%',
+    height: 92,
+    borderRadius: 12,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    borderWidth: 0.5,
+    borderColor: 'grey',
+  },
+
+  infoCardLeft: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+
+  infoCardTitle: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+
+  infoCardSubtitle: {
+    color: '#666',
+    marginTop: 6,
+  },
+
+  infoCardImage: {
+    width: 64,
+    height: 64,
+    resizeMode: 'contain',
+    marginLeft: 12,
+  },
 
 
 })
