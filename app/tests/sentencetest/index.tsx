@@ -145,7 +145,7 @@ export default function SentenceTest() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, alignItems: 'center', backgroundColor: '#FAFDD6' },
+  container: { flex: 1, padding: 16, alignItems: 'center', backgroundColor: '#f6f7f8' },
   header: { width: '100%', alignItems: 'center', marginBottom: 12 },
   title: { fontSize: 18, fontWeight: '700' },
   progress: { color: '#666', marginTop: 6 },

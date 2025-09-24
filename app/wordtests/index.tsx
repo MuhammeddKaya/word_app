@@ -13,7 +13,7 @@ export default function wordtests() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FAFDD6' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f6f7f8' }}>
         <Text>Yükleniyor...</Text>
       </View>
     )
@@ -76,7 +76,7 @@ export default function wordtests() {
   const itemWidth = (windowWidth - horizontalPadding - gapBetween * (columns - 1)) / columns;
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#FAFDD6' }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#f6f7f8' }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
       <Text style={styles.text}>Kelime Testleri</Text>
       <View style={styles.row}>
         {filtered.map((it: any) => (
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FAFDD6',
+        backgroundColor: '#f6f7f8',
         padding: 20,
     },
     row: {

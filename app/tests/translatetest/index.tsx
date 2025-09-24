@@ -162,7 +162,7 @@ export default function TranslateTest() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, alignItems: 'center', backgroundColor: '#FAFDD6' },
+  container: { flex: 1, padding: 16, alignItems: 'center', backgroundColor: '#f6f7f8' },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 8 },
   progress: { marginBottom: 8 },
   card: { width: '100%', backgroundColor: '#fff', padding: 16, borderRadius: 8 },

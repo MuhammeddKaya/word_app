@@ -168,7 +168,7 @@ export default function LearnTest() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex:1, padding:16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FAFDD6' },
+  container: { flex:1, padding:16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f6f7f8' },
   title: { fontSize:20, fontWeight:'bold', textAlign:'center' },
   progress: { textAlign:'center', marginVertical:8 },
   card: { padding:16, borderRadius:8, backgroundColor:'#fff', marginVertical:12, width: '100%' },

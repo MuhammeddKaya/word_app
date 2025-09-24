@@ -2,6 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Imag
 import React, { useState }   from 'react'
 // Picker removed — replaced by level cards
 import {Link, useRouter} from 'expo-router'
+import { Ionicons } from '@expo/vector-icons';
 import { BannerAd, BannerAdSize, TestIds, InterstitialAd } from 'react-native-google-mobile-ads';
 
 export default function HomeScreen({}) {
@@ -15,7 +16,7 @@ export default function HomeScreen({}) {
         {/* <Image source={require('../assets/images/wordifyikon.png')} style={{ width: windowHeight * 0.18, height: windowHeight * 0.16, marginBottom: 12 }} />
         <Text style={styles.logoText}>Wordify </Text> */}
 
-        <Text style={{ marginBottom: 8, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Seviye</Text>
+        <Text style={{ marginBottom: 8, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Kelime Setleri</Text>
         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
           <View style={styles.levelContainer}>
             <TouchableOpacity
@@ -23,7 +24,13 @@ export default function HomeScreen({}) {
               onPress={() => router.push(`/wordtests?level=${encodeURIComponent('kolay')}`)}
             >
               <View style={styles.cardLeftIconWrapper}>
-                <Image source={require('../assets/images/wordify.png')} style={styles.levelCardImageLeft} />
+                <View style={styles.starWrapperTop}>
+                  <Ionicons name="star-outline" size={16} color="lightgreen" />
+                </View>
+                <View style={styles.starWrapperBottom}>
+                  <Ionicons name="star-outline" size={16} color="lightgreen" />
+                  <Ionicons name="star" size={16} color="lightgreen" />
+                </View>
               </View>
               <View style={styles.cardRightTextWrapper}>
                 <Text style={styles.levelCardText}>Kolay</Text>
@@ -35,7 +42,13 @@ export default function HomeScreen({}) {
               onPress={() => router.push(`/wordtests?level=${encodeURIComponent('orta')}`)}
             >
               <View style={styles.cardLeftIconWrapper}>
-                <Image source={require('../assets/images/sablon.png')} style={styles.levelCardImageLeft} />
+                <View style={styles.starWrapperTop}>
+                  <Ionicons name="star-outline" size={16} color="orange" />
+                </View>
+                <View style={styles.starWrapperBottom}>
+                  <Ionicons name="star" size={16} color="orange" />
+                  <Ionicons name="star" size={16} color="orange" />
+                </View>
               </View>
               <View style={styles.cardRightTextWrapper}>
                 <Text style={styles.levelCardText}>Orta</Text>
@@ -47,7 +60,13 @@ export default function HomeScreen({}) {
               onPress={() => router.push(`/wordtests?level=${encodeURIComponent('zor')}`)}
             >
               <View style={styles.cardLeftIconWrapper}>
-                <Image source={require('../assets/images/wordifyikon.png')} style={styles.levelCardImageLeft} />
+                <View style={styles.starWrapperTop}>
+                  <Ionicons name="star" size={16} color="red" />
+                </View>
+                <View style={styles.starWrapperBottom}>
+                  <Ionicons name="star" size={16} color="red" />
+                  <Ionicons name="star" size={16} color="red" />
+                </View>
               </View>
               <View style={styles.cardRightTextWrapper}>
                 <Text style={styles.levelCardText}>Zor</Text>
@@ -59,7 +78,7 @@ export default function HomeScreen({}) {
               onPress={() => router.push(`/wordtests?level=${encodeURIComponent('kelimelerim')}`)}
             >
               <View style={styles.cardLeftIconWrapper}>
-                <Image source={require('../assets/images/wordify.png')} style={styles.levelCardImageLeft} />
+                <Ionicons name="text" size={28} color="#333" />
               </View>
               <View style={styles.cardRightTextWrapper}>
                 <Text style={styles.levelCardText}>Benim Kelimelerim</Text>
@@ -68,22 +87,22 @@ export default function HomeScreen({}) {
           </View>
         </View>
 
-        <Text style={{ marginBottom: 8, marginTop: 12, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Favori kelimeler</Text>
+        <Text style={{ marginBottom: 8, marginTop: 30, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Favori kelimeler</Text>
         <TouchableOpacity style={styles.infoCard} onPress={() => router.push('/favorites')}>
           <View style={styles.infoCardLeft}>
-            <Text style={styles.infoCardTitle}>Favorite Words</Text>
-            <Text style={styles.infoCardSubtitle}>Review your favorite words</Text>
+            <Text style={styles.infoCardTitle}>Favori Kelimeleriniz</Text>
+            <Text style={styles.infoCardSubtitle}>Favori kelimelerinizi gözden geçirin veya pdf olarak indirin</Text>
           </View>
-          <Image source={require('../assets/images/wordifyikon.png')} style={styles.infoCardImage} />
+          <Ionicons name="heart" size={36} color="red" />
         </TouchableOpacity>
 
-        <Text style={{ marginBottom: 8, marginTop: 12, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Kelime Ekle</Text>
+        <Text style={{ marginBottom: 8, marginTop: 30, fontSize: 24, alignItems: 'flex-start', fontWeight: 'bold' }}>Kelime Ekle</Text>
         <TouchableOpacity style={styles.infoCard} onPress={() => router.push('/mywords')}>
           <View style={styles.infoCardLeft}>
-            <Text style={styles.infoCardTitle}>Import</Text>
-            <Text style={styles.infoCardSubtitle}>Import your own words</Text>
+            <Text style={styles.infoCardTitle}>Kendi Kelimelerinizi Ekleyin</Text>
+            <Text style={styles.infoCardSubtitle}>Elle yada Excel ile kelimelerinizi topluca ekleyebilirsiniz</Text>
           </View>
-          <Image source={require('../assets/images/sablon.png')} style={styles.infoCardImage} />
+          <Ionicons name="add-circle" size={40} color="grey" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -91,7 +110,7 @@ export default function HomeScreen({}) {
 } 
 
 const ACCENT = '#647FBC'
-const BG = '#ffffffff'
+const BG = '#f6f7f8'
 
 const styles = StyleSheet.create({
   container: { 
@@ -104,7 +123,7 @@ const styles = StyleSheet.create({
   logoBox: { 
     width: '70%',
     height: 80,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: ACCENT,
     backgroundColor: ACCENT,
     alignItems: 'center',
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
     height: 72,
     marginVertical: 6,
     backgroundColor: '#ffffff',
-    borderWidth: 0.8,
+    borderWidth: 0.4,
     borderColor: 'grey',
     borderRadius: 12,
   },
@@ -211,7 +230,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     flexDirection: 'row',
     paddingHorizontal: 12,
-    borderWidth: 0.5,
+    borderWidth: 0.2,
     borderColor: 'grey',
   },
 
@@ -238,5 +257,15 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
 
+  starWrapperTop: {
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+
+  starWrapperBottom: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 4,
+  },
 
 })

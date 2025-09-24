@@ -28,7 +28,7 @@ export default function Tests(list: any,) {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FAFDD6' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f6f7f8' }}>
         <Text>Yükleniyor...</Text>
       </View>
     )
@@ -63,7 +63,7 @@ export default function Tests(list: any,) {
 }
 
 const ACCENT = '#647FBC'
-const BG = '#FAFDD6'
+const BG = '#f6f7f8'
 
 
 const styles = StyleSheet.create({

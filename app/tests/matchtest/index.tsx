@@ -173,7 +173,7 @@ export default function MatchTest() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, alignItems: 'center', backgroundColor: '#FAFDD6' },
+  container: { flex: 1, padding: 16, alignItems: 'center', backgroundColor: '#f6f7f8' },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 12 },
   area: { flexDirection: 'row', width: '100%', justifyContent: 'space-between' },
   column: { width: '48%' },
