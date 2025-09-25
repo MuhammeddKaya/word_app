@@ -1,33 +1,36 @@
 import React from 'react'
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { useTheme } from './lib/ThemeProvider'
 
 export default function About() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Wordify</Text>
+  const { theme } = useTheme();
 
-        <View style={styles.card}>
-          <Text style={styles.heading}>Uygulama Hakkında</Text>
-          <Text style={styles.text}>
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#F6F8FF' : '#000000' }]}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={[styles.title, { color: theme === 'light' ? '#1F2937' : '#fff' }]}>Wordify</Text>
+
+        <View style={[styles.card, { backgroundColor: theme === 'light' ? '#ffffff' : '#1c1c1c', borderColor: theme === 'light' ? '#EFF2FF' : '#333' }]}>
+          <Text style={[styles.heading, { color: theme === 'light' ? '#0F172A' : '#fff' }]}>Uygulama Hakkında</Text>
+          <Text style={[styles.text, { color: theme === 'light' ? '#374151' : '#ccc' }]}>
             Wordify, kelime öğrenimini kolay, hızlı ve eğlenceli hâle getiren bir mobil uygulamadır.
             Kullanıcılar hazır setlerde (Kolay, Orta, Zor) çalışabilir, kendi kelimelerini ekleyip
             10'ar kelimelik setler halinde düzenleyebilirler. Uygulama; kelime gösterme, örnek cümle,
             telaffuz ve çeşitli test tipleriyle öğrenmeyi destekler.
           </Text>
 
-          <Text style={styles.heading}>Amaç</Text>
-          <Text style={styles.text}>
+          <Text style={[styles.heading, { color: theme === 'light' ? '#0F172A' : '#fff' }]}>Amaç</Text>
+          <Text style={[styles.text, { color: theme === 'light' ? '#374151' : '#ccc' }]}>
             Amaç: Kelime hazinesini sistematik olarak genişletmek, öğrenme süreçlerini takip etmek ve
             kısa pratiklerle bilginin kalıcılığını artırmaktır. Testler ve tekrarlar sayesinde öğrenme
             sürekliliği hedeflenir.
           </Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.heading}>Geliştirici</Text>
-          <Text style={styles.text}>Impala Yazılım</Text>
+        <View style={[styles.card, { backgroundColor: theme === 'light' ? '#ffffff' : '#1c1c1c', borderColor: theme === 'light' ? '#EFF2FF' : '#333' }]}>
+          <Text style={[styles.heading, { color: theme === 'light' ? '#0F172A' : '#fff' }]}>Geliştirici</Text>
+          <Text style={[styles.text, { color: theme === 'light' ? '#374151' : '#ccc' }]}>Impala Yazılım</Text>
 
           <TouchableOpacity
             style={styles.linkRow}
@@ -48,7 +51,7 @@ export default function About() {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.footer}>Teşekkürler — iyi çalışmalar!</Text>
+        <Text style={[styles.footer, { color: theme === 'light' ? '#6B7280' : '#ccc' }]}>Teşekkürler — iyi çalışmalar!</Text>
       </ScrollView>
     </SafeAreaView>
   )

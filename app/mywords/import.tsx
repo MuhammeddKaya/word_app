@@ -6,11 +6,13 @@ import * as Sharing from 'expo-sharing'
 import { useData } from '../lib/DataProvider'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
+import { useTheme } from '../lib/ThemeProvider'
 
 export default function ImportMyWords() {
   const router = useRouter()
   const { importMyWordsFromExcel } = useData()
   const [loading, setLoading] = React.useState(false)
+  const { theme } = useTheme();
 
   const pick = async () => {
     try {
@@ -84,39 +86,39 @@ export default function ImportMyWords() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#FAF9FF' : '#000000' }]}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View style={styles.header}>
-          <Text style={styles.title}>Excel İle Toplu Kelime Ekleme</Text>
+          <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>Excel İle Toplu Kelime Ekleme</Text>
         </View>
 
-        <View style={styles.templateBox}>
-          <Text style={styles.templateTitle}>Örnek Resim</Text>
+        <View style={[styles.templateBox, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
+          <Text style={[styles.templateTitle, { color: theme === 'light' ? '#000' : '#fff' }]}>Örnek Resim</Text>
           <Image source={require('../../assets/images/sablon.png')} style={{ width: '100%', height: 150, resizeMode: 'contain', marginBottom: 8 }} />
 
           <TouchableOpacity style={styles.templateBtn} onPress={downloadTemplate}>
-            <Ionicons name="download" size={16} color="#fff" />
-            <Text style={styles.templateBtnText}>Şablonu İndir (.xlsx)</Text>
+            <Ionicons name="download" size={16} color={theme === 'light' ? '#fff' : '#000'} />
+            <Text style={[styles.templateBtnText, { color: theme === 'light' ? '#fff' : '#000' }]}>Şablonu İndir (.xlsx)</Text>
           </TouchableOpacity>
 
-          <Text style={styles.note}>Not: İlk satır başlık olmalıdır. </Text>
+          <Text style={[styles.note, { color: theme === 'light' ? '#666' : '#ccc' }]}>Not: İlk satır başlık olmalıdır. </Text>
         </View>
 
         <View style={{ flexDirection: 'row', marginTop: 12, alignItems: 'center', justifyContent: 'center' }}>
           <TouchableOpacity style={styles.actionBtn} onPress={pick} disabled={loading}>
-            <Ionicons name="cloud-upload" size={18} color="#fff" />
-            <Text style={styles.actionText}>{loading ? 'Yükleniyor...' : 'Dosya Seç & Yükle'}</Text>
+            <Ionicons name="cloud-upload" size={18} color={theme === 'light' ? '#fff' : '#000'} />
+            <Text style={[styles.actionText, { color: theme === 'light' ? '#fff' : '#000' }]}>{loading ? 'Yükleniyor...' : 'Dosya Seç & Yükle'}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.actionBtn, styles.helpBtn]} onPress={() => {
             Alert.alert('Şablon', 'Excel yapı: ingilizce_kelime, turkce_kelime, ornek_cumle\nİlk satır başlık olmalıdır.')
           }}>
-            <Ionicons name="document-text" size={18} color="#fff" />
-            <Text style={styles.actionText}>Şablon Göster</Text>
+            <Ionicons name="document-text" size={18} color={theme === 'light' ? '#fff' : '#000'} />
+            <Text style={[styles.actionText, { color: theme === 'light' ? '#fff' : '#000' }]}>Şablon Göster</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.hint}>Yükleme sonrası kelimeleriniz otomatik olarak "Kelimelerim" altında 10’arlık setlere ayrılacaktır.</Text>
+        <Text style={[styles.hint, { color: theme === 'light' ? '#666' : '#ccc' }]}>Yükleme sonrası kelimeleriniz otomatik olarak "Kelimelerim" altında 10’arlık setlere ayrılacaktır.</Text>
       </ScrollView>
     </SafeAreaView>
   )

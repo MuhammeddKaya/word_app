@@ -3,12 +3,14 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Alert
 import { useRouter } from 'expo-router'
 import { useData } from '../lib/DataProvider'
 import { Ionicons } from '@expo/vector-icons'
+import { useTheme } from '../lib/ThemeProvider'
 
 export default function MyWordsList() {
   const router = useRouter()
   const { data, loading, removeMySet } = useData()
   const sets = data?.sets?.kelimelerim ?? []
   const totalWords = sets.reduce((acc: number, s: any) => acc + (s.words?.length ?? 0), 0)
+  const { theme } = useTheme();
 
   if (loading) {
     return (
@@ -19,37 +21,37 @@ export default function MyWordsList() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#FAF9FF' : '#000000' }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Benim Kelimelerim</Text>
-        <Text style={styles.subtitle}>{sets.length} set • {totalWords} kelime</Text>
+        <Text style={[styles.title, { color: theme === 'light' ? '#222' : '#fff' }]}>Benim Kelimelerim</Text>
+        <Text style={[styles.subtitle, { color: theme === 'light' ? '#666' : '#ccc' }]}>{sets.length} set • {totalWords} kelime</Text>
       </View>
 
       <View style={styles.actions}>
         <TouchableOpacity style={styles.actionBtn} onPress={() => router.push('/mywords/add')}>
           <Ionicons name="add-circle" size={18} color="#fff" />
-          <Text style={styles.actionText}>Elle Ekle</Text>
+          <Text style={[styles.actionText, { color: theme === 'light' ? '#fff' : '#000' }]}>Elle Ekle</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.actionBtn, styles.importBtn]} onPress={() => router.push('/mywords/import')}>
           <Ionicons name="cloud-upload" size={18} color="#fff" />
-          <Text style={styles.actionText}>Excel Yükle</Text>
+          <Text style={[styles.actionText, { color: theme === 'light' ? '#fff' : '#000' }]}>Excel Yükle</Text>
         </TouchableOpacity>
       </View>
 
       {(!sets || sets.length === 0) ? (
         <View style={styles.empty}>
           <Text style={styles.emptyIcon}>🗂️</Text>
-          <Text style={styles.emptyTitle}>Henüz hiçbir kelime eklemediniz</Text>
-          <Text style={styles.emptyText}>Elle ekleyebilir veya Excel ile toplu yükleyebilirsiniz.</Text>
+          <Text style={[styles.emptyTitle, { color: theme === 'light' ? '#222' : '#fff' }]}>Henüz hiçbir kelime eklemediniz</Text>
+          <Text style={[styles.emptyText, { color: theme === 'light' ? '#666' : '#ccc' }]}>Elle ekleyebilir veya Excel ile toplu yükleyebilirsiniz.</Text>
           <View style={{ flexDirection: 'row', marginTop: 12 }}>
             <TouchableOpacity style={styles.actionBtn} onPress={() => router.push('/mywords/add')}>
               <Ionicons name="add-circle" size={18} color="#fff" />
-              <Text style={styles.actionText}>Elle Ekle</Text>
+              <Text style={[styles.actionText, { color: theme === 'light' ? '#fff' : '#000' }]}>Elle Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.actionBtn, styles.importBtn]} onPress={() => router.push('/mywords/import')}>
               <Ionicons name="cloud-upload" size={18} color="#fff" />
-              <Text style={styles.actionText}>Excel Yükle</Text>
+              <Text style={[styles.actionText, { color: theme === 'light' ? '#fff' : '#000' }]}>Excel Yükle</Text>
             </TouchableOpacity>
           </View>
         </View>

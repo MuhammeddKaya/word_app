@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, TextInput, TouchableOpacity, Alert, StyleShee
 import { useRouter } from 'expo-router'
 import { useData } from '../lib/DataProvider'
 import { Ionicons } from '@expo/vector-icons'
+import { useTheme } from '../lib/ThemeProvider'
 
 export default function AddMyWord() {
   const router = useRouter()
@@ -11,6 +12,7 @@ export default function AddMyWord() {
   const [meaning, setMeaning] = React.useState('')
   const [example, setExample] = React.useState('')
   const [loading, setLoading] = React.useState(false)
+  const { theme } = useTheme();
 
   const onSave = async () => {
     if (!word.trim()) { Alert.alert('Hata', 'İngilizce kelime gerekli'); return }
@@ -27,11 +29,11 @@ export default function AddMyWord() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#FAF9FF' : '#000000' }]}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <View style={styles.header}>
-          <Text style={styles.title}>Yeni Kelime Ekle</Text>
-          <Text style={styles.subtitle}>Elle ekleme — İngilizce, Türkçe ve örnek cümle</Text>
+          <Text style={[styles.title, { color: theme === 'light' ? '#222' : '#fff' }]}>Yeni Kelime Ekle</Text>
+          <Text style={[styles.subtitle, { color: theme === 'light' ? '#666' : '#ccc' }]}>Elle ekleme — İngilizce, Türkçe ve örnek cümle</Text>
         </View>
 
         <View style={styles.form}>
@@ -51,11 +53,11 @@ export default function AddMyWord() {
           </View>
 
           <TouchableOpacity style={[styles.btn, loading && styles.disabled]} onPress={onSave} disabled={loading}>
-            <Text style={styles.btnText}>{loading ? 'Kaydediliyor...' : 'Kaydet'}</Text>
+            <Text style={[styles.btnText, { color: theme === 'light' ? '#fff' : '#000' }]}>{loading ? 'Kaydediliyor...' : 'Kaydet'}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.btn, styles.cancel]} onPress={() => router.back()}>
-            <Text style={[styles.btnText, { color: '#333' }]}>İptal</Text>
+          <TouchableOpacity style={[styles.btn, styles.cancel, { backgroundColor: theme === 'light' ? '#F0F0F0' : '#333' }]} onPress={() => router.back()}>
+            <Text style={[styles.btnText, { color: theme === 'light' ? '#333' : '#000000ff' }]}>İptal</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

@@ -3,9 +3,11 @@ import React from 'react'
 import { useData } from '../lib/DataProvider'
 import * as Print from 'expo-print'
 import * as Sharing from 'expo-sharing'
+import { useTheme } from '../lib/ThemeProvider'
 
 export default function Favorites() {
   const { data, loading, removeFromFavorites } = useData()
+  const { theme } = useTheme();
 
   if (loading) {
     return (
@@ -239,19 +241,19 @@ export default function Favorites() {
   )
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Favori Kelimeler</Text>
+        <Text style={[styles.title, { color: theme === 'light' ? '#333' : '#fff' }]}>Favori Kelimeler</Text>
         {favoriteWords.length > 0 && (
           <TouchableOpacity onPress={exportToPDF} style={styles.exportBtn}>
-            <Text style={styles.exportBtnText}>📄 PDF İndir</Text>
+            <Text style={[styles.exportBtnText, { color: theme === 'light' ? '#fff' : '#000' }]}>📄 PDF İndir</Text>
           </TouchableOpacity>
         )}
       </View>
       {favoriteWords.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Henüz favori kelime eklemediniz.</Text>
-          <Text style={styles.emptyHint}>Learn testlerinde kelime kartlarına ❤️ butonu ile kelime ekleyebilirsiniz.</Text>
+          <Text style={[styles.emptyText, { color: theme === 'light' ? '#666' : '#ccc' }]}>Henüz favori kelime eklemediniz.</Text>
+          <Text style={[styles.emptyHint, { color: theme === 'light' ? '#999' : '#aaa' }]}>Learn testlerinde kelime kartlarına ❤️ butonu ile kelime ekleyebilirsiniz.</Text>
         </View>
       ) : (
         <FlatList
