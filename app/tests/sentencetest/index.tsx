@@ -2,6 +2,7 @@ import React from 'react'
 import { SafeAreaView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
+import { useTheme } from '../../lib/ThemeProvider'
 
 function escapeRegExp(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -18,6 +19,7 @@ export default function SentenceTest() {
   const [index, setIndex] = React.useState(0)
   const [input, setInput] = React.useState('')
   const [showAnswer, setShowAnswer] = React.useState(false)
+  const { theme } = useTheme();
 
   React.useEffect(() => {
     setIndex(0)
@@ -104,18 +106,18 @@ export default function SentenceTest() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>{selectedSet.title} - Cümle Tamamlama</Text>
-        <Text style={styles.progress}>{index + 1} / {words.length}</Text>
+        <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title} - Cümle Tamamlama</Text>
+        <Text style={[styles.progress, { color: theme === 'light' ? '#666' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.hint}>Aşağıdaki cümledeki boşluğu doğru kelime ile doldurun:</Text>
-        <Text style={styles.sentence}>{masked}</Text>
+      <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
+        <Text style={[styles.hint, { color: theme === 'light' ? '#666' : '#f6f7f8' }]}>Aşağıdaki cümledeki boşluğu doğru kelime ile doldurun:</Text>
+        <Text style={[styles.sentence, { color: theme === 'light' ? '#111' : '#fff' }]}>{masked}</Text>
 
         {showAnswer && (
-          <Text style={styles.answer}>Doğru cevap: <Text style={{ fontWeight: 'bold' }}>{expected}</Text></Text>
+          <Text style={[styles.answer, { color: theme === 'light' ? '#000' : '#fff' }]}>Doğru cevap: <Text style={{ fontWeight: 'bold', color: theme === 'light' ? '#000' : '#fff' }}>{expected}</Text></Text>
         )}
 
         <TextInput
@@ -132,11 +134,11 @@ export default function SentenceTest() {
 
         <View style={styles.controls}>
           <TouchableOpacity onPress={goPrev} style={[styles.btn, index === 0 && styles.disabled]} disabled={index === 0 || showAnswer}>
-            <Text style={styles.btnText}>Önceki</Text>
+            <Text style={[styles.btnText, { color: theme === 'light' ? '#fff' : '#000' }]}>Önceki</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleCheck} style={styles.btn} disabled={showAnswer}>
-            <Text style={styles.btnText}>{index < words.length - 1 ? 'Kontrol et' : 'Bitir'}</Text>
+            <Text style={[styles.btnText, { color: theme === 'light' ? '#fff' : '#000' }]}>{index < words.length - 1 ? 'Kontrol et' : 'Bitir'}</Text>
           </TouchableOpacity>
         </View>
       </View>

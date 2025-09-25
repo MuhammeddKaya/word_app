@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
+import { useTheme } from '../../lib/ThemeProvider'
 
 function shuffle<T>(arr: T[]) {
   const a = arr.slice()
@@ -17,6 +18,7 @@ export default function MatchTest() {
   const router = useRouter()
   const { data, loading, updateSet } = useData()
   const sets = data?.sets ?? null
+  const { theme } = useTheme();
 
   const [leftItems, setLeftItems] = React.useState<any[]>([])
   const [rightItems, setRightItems] = React.useState<any[]>([])
@@ -156,9 +158,9 @@ export default function MatchTest() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{selectedSet.title}</Text>
-      <Text style={styles.title}>Eşleştirme Testi</Text>
+    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
+      <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title}</Text>
+      <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>Eşleştirme Testi</Text>
       <View style={styles.area}>
         <View style={styles.column}>
           {leftItems.map((it, idx) => renderItem(it, true, idx))}
@@ -167,7 +169,7 @@ export default function MatchTest() {
           {rightItems.map((it, idx) => renderItem(it, false, idx))}
         </View>
       </View>
-      <Text style={styles.hint}>Eşleştirmek için bir kelime seçin, sonra karşısındaki anlamı seçin.</Text>
+      <Text style={[styles.hint, { color: theme === 'light' ? '#333' : '#ccc' }]}>Eşleştirmek için bir kelime seçin, sonra karşısındaki anlamı seçin.</Text>
     </View>
   )
 }

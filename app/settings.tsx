@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { useData } from './lib/DataProvider';
 import { useRouter } from 'expo-router';
+import { useTheme } from './lib/ThemeProvider';
 
 const COLORS = [
   { name: 'Mavi', value: '#647FBC' },
@@ -14,11 +15,10 @@ const COLORS = [
 ];
 
 export default function Settings() {
-  const [darkMode, setDarkMode] = React.useState(false);
   const [templateColor, setTemplateColor] = React.useState(COLORS[0].value);
-
   const { data, wipeProgressOnly } = useData();
   const router = useRouter();
+  const { theme } = useTheme();
 
   // Veriyi dışa aktar
   const handleExport = async () => {
@@ -57,20 +57,11 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Ayarlar</Text>
-
-      {/* Dark Mode */}
-      <View style={styles.row}>
-        <Text style={styles.label}>Koyu Mod</Text>
-        <Switch
-          value={darkMode}
-          onValueChange={setDarkMode}
-        />
-      </View>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#FAF9FF' : '#000000' }]}>
+      <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>Ayarlar</Text>
 
       {/* Template Color */}
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <Text style={styles.label}>Tema Rengi</Text>
         <View style={styles.paletteRow}>
           {COLORS.map(c => (
@@ -84,16 +75,16 @@ export default function Settings() {
             />
           ))}
         </View>
-      </View>
+      </View> */}
 
       {/* Export Data */}
       <TouchableOpacity style={styles.exportBtn} onPress={handleExport}>
-        <Text style={styles.exportText}>Veriyi Dışa Aktar</Text>
+        <Text style={[styles.exportText, { color: theme === 'light' ? '#fff' : '#000' }]}>Veriyi Dışa Aktar</Text>
       </TouchableOpacity>
 
       {/* Sadece ilerlemeyi sil */}
       <TouchableOpacity style={styles.wipeBtn} onPress={handleWipeProgress}>
-        <Text style={styles.wipeText}>Verileri Sıfırla</Text>
+        <Text style={[styles.wipeText, { color: theme === 'light' ? '#fff' : '#000' }]}>Verileri Sıfırla</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

@@ -3,10 +3,11 @@ import React from 'react'
 import TestComponent from '@/components/tests'
 import { useLocalSearchParams } from 'expo-router'
 import { useData } from '../lib/DataProvider'
+import { useTheme } from '../lib/ThemeProvider'
 
 export default function wordtests() {
   const { level } = useLocalSearchParams() // 'kolay' | 'orta' | 'zor' | 'kelimelerim'
-
+  const { theme } = useTheme();
   // use DataProvider as single source of truth
   const { data, loading } = useData()
   const sets = data?.sets ?? {}
@@ -76,8 +77,8 @@ export default function wordtests() {
   const itemWidth = (windowWidth - horizontalPadding - gapBetween * (columns - 1)) / columns;
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#f6f7f8' }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
-      <Text style={styles.text}>Kelime Testleri</Text>
+    <ScrollView style={{ flex: 1, backgroundColor: theme === 'light' ? '#f6f7f8' : '#222' }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
+      <Text style={[styles.text, { color: theme === 'light' ? '#000' : '#fff' }]}>Kelime Testleri</Text>
       <View style={styles.row}>
         {filtered.map((it: any) => (
           <TestComponent key={it.id} id={it.id} name={it.title ?? it.name} style={{ width: itemWidth, height: itemWidth * 0.6 }} />

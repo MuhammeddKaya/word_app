@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
+import { useTheme } from '../../lib/ThemeProvider'
 
 export default function LearnTest() {
   const { setId } = useLocalSearchParams()
@@ -9,6 +10,7 @@ export default function LearnTest() {
   const [index, setIndex] = React.useState(0)
   const { data, loading, updateSet, addToFavorites, removeFromFavorites, isFavorite } = useData()
   const sets = data?.sets ?? null
+  const { theme } = useTheme();
 
   React.useEffect(() => {
     setIndex(0)
@@ -117,21 +119,21 @@ export default function LearnTest() {
   const current = words[index]
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{selectedSet.title}</Text>
-      <Text style={styles.progress}>{index + 1} / {words.length}</Text>
+    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
+      <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title}</Text>
+      <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
 
       {current ? (
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
           <View style={styles.wordRow}>
-            <Text style={styles.word}>{current.word}</Text>
+            <Text style={[styles.word, { color: theme === 'light' ? '#000' : '#fff' }]}>{current.word}</Text>
             <TouchableOpacity onPress={() => speakWord(current.word)} style={styles.speakerBtn} accessibilityLabel="Seslendir">
               <Text>🔊</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.meaning}>{current.meaning}</Text>
-          <Text style={styles.example}> örn: {current.example}</Text>
-          
+          <Text style={[styles.meaning, { color: theme === 'light' ? '#000' : '#fff' }]}>{current.meaning}</Text>
+          <Text style={[styles.example, { color: theme === 'light' ? '#666' : '#ccc' }]}> örn: {current.example}</Text>
+
           {/* Favori butonu */}
           <View style={styles.favoriteRow}>
             <TouchableOpacity 
@@ -156,10 +158,10 @@ export default function LearnTest() {
 
       <View style={styles.controls}>
         <TouchableOpacity onPress={goPrev} disabled={index === 0} style={[styles.btn, index === 0 && styles.disabled]}>
-          <Text>Önceki</Text>
+          <Text style={{ color: theme === 'light' ? '#000' : '#fff' }}>Önceki</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={goNext} style={[styles.btn, (done && index >= words.length - 1) && styles.disabled]}>
-          <Text>{index < words.length - 1 ? 'Sonraki' : done ? 'Tamamlandı' : 'Bitir'}</Text>
+          <Text style={{ color: theme === 'light' ? '#000' : '#fff' }}>{index < words.length - 1 ? 'Sonraki' : done ? 'Tamamlandı' : 'Bitir'}</Text>
         </TouchableOpacity>
       </View>
 

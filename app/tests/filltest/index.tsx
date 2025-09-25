@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import React from 'react'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
+import { useTheme } from '../../lib/ThemeProvider'
 
 function maskWord(word: string) {
   const chars = word.split('')
@@ -23,6 +24,7 @@ export default function FillTest() {
   const router = useRouter()
   const { data, loading, updateSet } = useData()
   const sets = data?.sets ?? null
+  const { theme } = useTheme();
 
   const [index, setIndex] = React.useState(0)
   const [input, setInput] = React.useState('') // kept for hidden TextInput value
@@ -136,15 +138,15 @@ export default function FillTest() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
-        <View style={styles.container}>
-           <Text style={styles.title}>{selectedSet.title} - Fill</Text>
-           <Text style={styles.progress}>{index + 1} / {words.length}</Text>
+        <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
+           <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title} - Fill</Text>
+           <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
 
            {current ? (
-             <View style={styles.card}>
-               <Text style={styles.meaning}>{current.meaning}</Text>
+             <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
+               <Text style={[styles.meaning, { color: theme === 'light' ? '#000' : '#fff' }]}>{current.meaning}</Text>
 
-               <Text style={styles.maskLabel}>Tamamlayın:</Text>
+               <Text style={[styles.maskLabel, { color: theme === 'light' ? '#000' : '#fff' }]}>Tamamlayın:</Text>
                <View style={styles.wordRow}>
                  {displayChars.map((ch, i) => {
                    const isHidden = hiddenIndices.includes(i)
@@ -165,8 +167,8 @@ export default function FillTest() {
                </View>
 
                {showAnswer && (
-                 <Text style={styles.answer}>
-                   Doğru cevap: <Text style={{ fontWeight: 'bold' }}>{current.word}</Text>
+                 <Text style={[styles.answer, { color: theme === 'light' ? '#000' : '#fff' }]}>
+                   Doğru cevap: <Text style={{ fontWeight: 'bold', color: theme === 'light' ? '#000' : '#fff' }}>{current.word}</Text>
                  </Text>
                )}
 
@@ -192,7 +194,7 @@ export default function FillTest() {
 
                <View style={styles.controls}>
                  <TouchableOpacity onPress={goPrev} disabled={index === 0 || showAnswer} style={[styles.btn, (index === 0 || showAnswer) && styles.disabled]}>
-                   <Text>Önceki</Text>
+                   <Text style={{ color: theme === 'light' ? '#000' : '#fff' }}>Önceki</Text>
                  </TouchableOpacity>
                  <TouchableOpacity
                    onPress={async () => {
@@ -219,7 +221,7 @@ export default function FillTest() {
                    disabled={!allFilled || !showAnswer}
                    style={[styles.btn, (!allFilled || !showAnswer) && styles.disabled]}
                  >
-                   <Text>{index < words.length - 1 ? 'Sonraki' : 'Bitir'}</Text>
+                   <Text style={{ color: theme === 'light' ? '#000' : '#fff' }}>{index < words.length - 1 ? 'Sonraki' : 'Bitir'}</Text>
                  </TouchableOpacity>
                </View>
              </View>
@@ -241,7 +243,7 @@ const styles = StyleSheet.create({
   wordRow: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 18 },
   charBox: { minWidth: 28, minHeight: 36, margin: 4, alignItems: 'center', justifyContent: 'center', borderRadius: 6, backgroundColor: '#fff' },
   charHidden: { borderWidth: 1, borderColor: '#ccc', backgroundColor: '#f7f7f7' },
-  charFocused: { borderColor: '#647FBC', borderWidth: 2 },
+  charFocused: { borderColor: '#0d51eeff', borderWidth: 2 },
   charText: { fontSize: 20, fontWeight: '700' },
   charWrong: { backgroundColor: '#ffd6d6', borderColor: '#ff4d4f', borderWidth: 1 },
   letterInput: { width: 64, height: 44, borderWidth: 1, borderColor: '#ccc', borderRadius: 6, textAlign: 'center', fontSize: 18, marginBottom: 12 },

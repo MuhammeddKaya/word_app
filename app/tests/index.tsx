@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, useWindowDimensions, Alert } from 'react-native';
 import React from 'react'
 import { useLocalSearchParams } from 'expo-router';
-
+import { useTheme } from '../lib/ThemeProvider';
 import {Link, useRouter} from 'expo-router'
 import { useData } from '../lib/DataProvider'
 
@@ -13,6 +13,7 @@ export default function Tests(list: any,) {
   const windowWidth = useWindowDimensions().width;
   const router = useRouter();
   const { setId } = useLocalSearchParams(); // string | undefined
+  const { theme } = useTheme();
 
   const selectedSet = React.useMemo(() => {
     if (!setId) return undefined
@@ -35,9 +36,9 @@ export default function Tests(list: any,) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#222' }]}>
       <View>
-        <Text style={{ textAlign: 'center', marginBottom: 8, fontSize: 24, fontWeight: 'bold' }}>{selectedSet?.title ?? ''}</Text>
+        <Text style={{ textAlign: 'center', marginBottom: 8, fontSize: 24, fontWeight: 'bold', color: theme === 'light' ? '#000' : '#fff' }}>{selectedSet?.title ?? ''}</Text>
       </View>
       <TouchableOpacity style={styles.card} onPress={() => router.push(`/tests/learntest?setId=${encodeURIComponent(String(setId ?? ''))}`)}>
         <Text style={styles.cardText}>Öğren</Text>

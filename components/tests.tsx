@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View, Text, ViewStyle, TouchableOpacity } from 'react-native';
 import { useData } from '../app/lib/DataProvider';
+import { useTheme } from '../app/lib/ThemeProvider';
 
 type Props = {
   id: string;
@@ -14,6 +15,7 @@ type Props = {
 export default function TestComponent({ id, name, style, star }: Props) {
   const router = useRouter();
   const { data } = useData();
+  const { theme } = useTheme();
 
   // compute stars from completedTests if star prop not provided
   const computedStar = React.useMemo(() => {
@@ -28,10 +30,10 @@ export default function TestComponent({ id, name, style, star }: Props) {
 
   return (
     <TouchableOpacity
-      style={[styles.container, style]}
+      style={[styles.container, style, { backgroundColor: theme === 'light' ? '#fff' : '#333' }]}
       onPress={() => router.push(`/tests?setId=${encodeURIComponent(id)}`)}
     >
-      <Text>{name}</Text>
+      <Text style={{ color: theme === 'light' ? '#000' : '#fff' }}>{name}</Text>
 
       <View style={styles.starsRow}>
         {Array.from({ length: 4 }).map((_, i) => {
@@ -41,7 +43,7 @@ export default function TestComponent({ id, name, style, star }: Props) {
               key={i}
               name={filled ? 'star' : 'star-outline'}
               size={18}
-              color={filled ? '#FFD700' : '#999'}
+              color={filled ? theme === 'light' ? '#ffd000ff' : '#f11212ff' : '#999'}
               style={styles.star}
             />
           );

@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
+import { useTheme } from '../../lib/ThemeProvider'
 
 function parseMeanings(raw: any): string[] {
   if (!raw && raw !== 0) return []
@@ -22,6 +23,7 @@ export default function TranslateTest() {
   const [input, setInput] = React.useState('')
   // whether the English word is visible (default hidden); TTS plays automatically
   const [showEnglish, setShowEnglish] = React.useState(false)
+  const { theme } = useTheme();
 
   React.useEffect(() => {
     setIndex(0)
@@ -115,16 +117,16 @@ export default function TranslateTest() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{selectedSet.title} - Translate</Text>
-      <Text style={styles.progress}>{index + 1} / {words.length}</Text>
+    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
+      <Text style={[styles.title, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{selectedSet.title} - Translate</Text>
+      <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
 
-      <View style={styles.card}>
+      <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
         <View style={{ alignItems: 'center' }}>
           {showEnglish ? (
             <Text style={styles.word}>{current.word}</Text>
           ) : (
-            <Text style={{ color: '#666', marginBottom: 10 }}>Kelime sesli olarak çalındı. Duymadıysanız tekrar çalın veya kelimeyi gösterin.</Text>
+            <Text style={{  marginBottom: 10, color: theme === 'light' ? '#222' : '#f6f7f8' }}>Kelime sesli olarak çalındı. Duymadıysanız tekrar çalın veya kelimeyi gösterin.</Text>
           )}
 
           <View style={styles.row}>
@@ -138,6 +140,7 @@ export default function TranslateTest() {
         </View>
 
         <TextInput
+          placeholderTextColor={theme === 'light' ? '#999' : '#ccc'}
           value={input}
           onChangeText={setInput}
           placeholder="Türkçe karşılığını yazın"
