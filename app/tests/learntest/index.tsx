@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
 import { useTheme } from '../../lib/ThemeProvider'
+import { BannerAd, BannerAdSize, TestIds } from "react-native-google-mobile-ads";
 
 export default function LearnTest() {
   const { setId } = useLocalSearchParams()
@@ -120,6 +121,23 @@ export default function LearnTest() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
+      {/* Banner Ad Area */}
+      <View style={{ marginBottom: 20, alignItems: 'center', borderWidth: 1, borderColor: 'red', position: 'absolute', top: 0, width: '100%' }}> {/* Kırmızı ile işaretli alan */}
+        <BannerAd
+          unitId={TestIds.BANNER} // Test ID
+          size={BannerAdSize.FULL_BANNER} // Reklam boyutu
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
+          }}
+          onAdLoaded={() => {
+            console.log('Banner Ad Loaded');
+          }}
+          onAdFailedToLoad={(error) => {
+            console.error('Banner Ad Failed to Load:', error);
+          }}
+        />
+      </View>
+
       <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title}</Text>
       <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
 

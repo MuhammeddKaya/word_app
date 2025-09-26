@@ -1,10 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Image, useWindowDimensions,  } from 'react-native';
-import React, { useState }   from 'react'
+import React, { useState, useEffect }   from 'react'
 // Picker removed — replaced by level cards
 import {Link, useRouter} from 'expo-router'
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from './lib/ThemeProvider'
-import { BannerAd, BannerAdSize, TestIds, InterstitialAd } from 'react-native-google-mobile-ads';
+import { InterstitialAd, TestIds, AdEventType } from "react-native-google-mobile-ads";
+
+const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL);
 
 export default function HomeScreen({}) {
   const windowHeight = useWindowDimensions().height;
@@ -12,6 +14,46 @@ export default function HomeScreen({}) {
   const router = useRouter();
   const [level, setLevel] = useState<'kolay' | 'orta' | 'zor' | 'kelimelerim'>('kolay');
   const { theme } = useTheme();
+
+  useEffect(() => {
+    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+      console.log('Ad Loaded');
+    });
+
+    interstitial.addAdEventListener(AdEventType.ERROR, (error) => {
+      console.error('Ad Error:', error);
+    });
+
+    interstitial.addAdEventListener(AdEventType.CLOSED, () => {
+      console.log('Ad Closed');
+      interstitial.load(); // Load the next ad
+    });
+
+    // Load the first ad
+    interstitial.load();
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const showAd = () => {
+    if (interstitial.loaded) { // Corrected method name
+      interstitial.show();
+    } else {
+      console.log('Ad not loaded yet');
+    }
+  };
+
+  const handleWordSetClick = (level: 'kolay' | 'orta' | 'zor' | 'kelimelerim') => {
+    if (interstitial.loaded) {
+      interstitial.show();
+    } else {
+      console.log('Ad not loaded yet');
+    }
+    router.push(`/wordtests?level=${encodeURIComponent(level)}`);
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#222' }]}>
       <View>
@@ -23,7 +65,7 @@ export default function HomeScreen({}) {
           <View style={styles.levelContainer}>
             <TouchableOpacity
               style={[styles.levelCard, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}
-              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('kolay')}`)}
+              onPress={() => handleWordSetClick('kolay')}
             >
               <View style={[styles.cardLeftIconWrapper, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}>
                 <View style={styles.starWrapperTop}>
@@ -41,7 +83,7 @@ export default function HomeScreen({}) {
 
             <TouchableOpacity
               style={[styles.levelCard, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}
-              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('orta')}`)}
+              onPress={() => handleWordSetClick('orta')}
             >
               <View style={[styles.cardLeftIconWrapper, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}>
                 <View style={styles.starWrapperTop}>
@@ -59,7 +101,7 @@ export default function HomeScreen({}) {
 
             <TouchableOpacity
               style={[styles.levelCard, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}
-              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('zor')}`)}
+              onPress={() => handleWordSetClick('zor')}
             >
               <View style={[styles.cardLeftIconWrapper, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}>
                 <View style={styles.starWrapperTop}>
@@ -77,7 +119,7 @@ export default function HomeScreen({}) {
 
             <TouchableOpacity
               style={[styles.levelCard, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}
-              onPress={() => router.push(`/wordtests?level=${encodeURIComponent('kelimelerim')}`)}
+              onPress={() => handleWordSetClick('kelimelerim')}
             >
               <View style={[styles.cardLeftIconWrapper, { backgroundColor: theme === 'light' ? '#fff' : '#323232' }]}>
                 <Ionicons name="text" size={28} color={theme === 'light' ? '#333' : '#fff'} />

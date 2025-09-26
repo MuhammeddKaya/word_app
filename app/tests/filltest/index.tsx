@@ -4,6 +4,7 @@ import React from 'react'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
 import { useTheme } from '../../lib/ThemeProvider'
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 function maskWord(word: string) {
   const chars = word.split('')
@@ -141,6 +142,22 @@ export default function FillTest() {
         <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
            <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title} - Fill</Text>
            <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
+
+           <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: 'red' }}>
+              <BannerAd
+                unitId={TestIds.BANNER}
+                size={BannerAdSize.FULL_BANNER}
+                requestOptions={{
+                  requestNonPersonalizedAdsOnly: true,
+                }}
+                onAdLoaded={() => {
+                  console.log('Banner Ad Loaded');
+                }}
+                onAdFailedToLoad={(error) => {
+                  console.error('Banner Ad Failed to Load:', error);
+                }}
+              />
+            </View>
 
            {current ? (
              <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>

@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
 import { useTheme } from '../../lib/ThemeProvider'
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 function parseMeanings(raw: any): string[] {
   if (!raw && raw !== 0) return []
@@ -117,7 +118,23 @@ export default function TranslateTest() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
+    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000', justifyContent: 'center' }]}>
+      <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: 'red' }}>
+        <BannerAd
+          unitId={TestIds.BANNER} // Test ID
+          size={BannerAdSize.FULL_BANNER} // Reklam boyutu
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
+          }}
+          onAdLoaded={() => {
+            console.log('Banner Ad Loaded');
+          }}
+          onAdFailedToLoad={(error) => {
+            console.error('Banner Ad Failed to Load:', error);
+          }}
+        />
+      </View>
+
       <Text style={[styles.title, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{selectedSet.title} - Translate</Text>
       <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
 

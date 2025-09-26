@@ -4,10 +4,11 @@ import { useRouter } from 'expo-router'
 import { useData } from '../lib/DataProvider'
 import { Ionicons } from '@expo/vector-icons'
 import { useTheme } from '../lib/ThemeProvider'
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function MyWordsList() {
   const router = useRouter()
-  const { data, loading, removeMySet } = useData()
+  const { data, loading, removeMySet } = useData(); // Ensure removeMySet is defined in the DataProvider context
   const sets = data?.sets?.kelimelerim ?? []
   const totalWords = sets.reduce((acc: number, s: any) => acc + (s.words?.length ?? 0), 0)
   const { theme } = useTheme();
@@ -106,6 +107,22 @@ export default function MyWordsList() {
           )}
         />
       )}
+
+      <View style={{ position: 'absolute', bottom: 60, width: '100%', alignItems: 'center', borderWidth: 0.1, borderColor: 'black' }}>
+        <BannerAd
+          unitId={TestIds.BANNER} // Test ID
+          size={BannerAdSize.FULL_BANNER} // Reklam boyutu
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
+          }}
+          onAdLoaded={() => {
+            console.log('Banner Ad Loaded');
+          }}
+          onAdFailedToLoad={(error) => {
+            console.error('Banner Ad Failed to Load:', error);
+          }}
+        />
+      </View>
     </SafeAreaView>
   )
 }
