@@ -3,6 +3,7 @@ import { SafeAreaView, View, Text, FlatList, TouchableOpacity, StyleSheet } from
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../lib/DataProvider'
 import { Ionicons } from '@expo/vector-icons'
+import { useTheme } from '../lib/ThemeProvider'
 
 export default function MyWordsSet() {
   const { setId } = useLocalSearchParams()
@@ -10,6 +11,7 @@ export default function MyWordsSet() {
   const { data, loading } = useData()
   const all = Object.values(data?.sets ?? {}).flat()
   const set = all.find((s: any) => s.id === String(setId))
+  const { theme } = useTheme()
 
   if (loading) return null
   if (!set) {
@@ -21,23 +23,23 @@ export default function MyWordsSet() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, theme==='light' ? { backgroundColor: '#FAF9FF' } : { backgroundColor: '#121212' }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.title}>{set.title}</Text>
+        <Text style={[styles.title, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>{set.title}</Text>
       </View>
 
       <FlatList
         data={set.words ?? []}
         keyExtractor={(w: any) => w.id}
         renderItem={({ item }) => (
-          <View style={styles.row}>
+          <View style={[styles.row, theme === 'light' ? { backgroundColor: '#fff' } : { backgroundColor: '#1c1c1c' }]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.word}>{item.word}</Text>
-              <Text style={styles.meaning}>{item.meaning}</Text>
-              <Text style={styles.example}>{item.example}</Text>
+              <Text style={[styles.word, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>{item.word}</Text>
+              <Text style={[styles.meaning, theme === 'light' ? { color: '#666' } : { color: '#fff' }]}>{item.meaning}</Text>
+              <Text style={[styles.example, theme === 'light' ? { color: '#888' } : { color: '#fff' }]}>örn: {item.example}</Text>
             </View>
           </View>
         )}

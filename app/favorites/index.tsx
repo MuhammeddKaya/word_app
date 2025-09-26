@@ -216,26 +216,26 @@ export default function Favorites() {
   }
 
   const renderItem = ({ item }: { item: any }) => (
-    <View style={styles.itemCard}>
+    <View style={[styles.itemCard, { backgroundColor: theme === 'light' ? '#fff' : '#1c1c1c', shadowColor: theme === 'light' ? '#000' : '#000', shadowOpacity: theme === 'light' ? 0.1 : 0.7 }]}>
       <View style={styles.wordHeader}>
-        <Text style={styles.wordText}>{item.word.word}</Text>
+        <Text style={[styles.wordText, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>{item.word.word}</Text>
         <View style={styles.wordActions}>
-          <TouchableOpacity onPress={() => speak(item.word.word)} style={styles.speakerBtn}>
+          <TouchableOpacity onPress={() => speak(item.word.word)} style={[styles.speakerBtn, theme === 'light' ? { backgroundColor: '#f0f0f0' } : { backgroundColor: '#333' }]}>
             <Text>🔊</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => removeFromFavorites(item.wordId)} 
-            style={styles.removeBtn}
+            style={[styles.removeBtn, theme === 'light' ? { backgroundColor: '#ffebee' } : { backgroundColor: '#660000' }]}
           >
             <Text>❌</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={styles.meaningText}>{item.word.meaning}</Text>
-      <Text style={styles.exampleText}>örn: {item.word.example}</Text>
+      <Text style={[styles.meaningText, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>{item.word.meaning}</Text>
+      <Text style={[styles.exampleText, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>örn: {item.word.example}</Text>
       <View style={styles.metaInfo}>
-        <Text style={styles.setInfo}>Set: {item.setTitle}</Text>
-        <Text style={styles.dateInfo}>Eklenme: {new Date(item.addedAt).toLocaleDateString('tr-TR')}</Text>
+        <Text style={[styles.setInfo, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>Set: {item.setTitle}</Text>
+        <Text style={[styles.dateInfo, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>Eklenme: {new Date(item.addedAt).toLocaleDateString('tr-TR')}</Text>
       </View>
     </View>
   )

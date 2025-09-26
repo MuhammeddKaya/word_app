@@ -63,12 +63,12 @@ export default function MyWordsList() {
           keyExtractor={s => s.id}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={styles.card}
+              style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#1c1c1c', shadowColor: theme === 'light' ? '#000' : '#000', shadowOpacity: theme === 'light' ? 0.1 : 0.7 }]}
               onPress={() => router.push(`./mywords/set?setId=${encodeURIComponent(item.id)}`)}
             >
               <View style={styles.cardLeft}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
-                <Text style={styles.cardMeta}>{(item.words?.length ?? 0)} kelime</Text>
+                <Text style={[styles.cardTitle, theme === 'light' ? { color: '#000' } : { color: '#fff' }]}>{item.title}</Text>
+                <Text style={[styles.cardMeta, theme === 'light' ? { color: '#666' } : { color: '#ccc' }]}>{(item.words?.length ?? 0)} kelime</Text>
               </View>
 
               <View style={styles.cardRight}>

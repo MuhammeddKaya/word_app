@@ -83,7 +83,8 @@ export default function HomeScreen({}) {
                 <Ionicons name="text" size={28} color={theme === 'light' ? '#333' : '#fff'} />
               </View>
               <View style={styles.cardRightTextWrapper}>
-                <Text style={[styles.levelCardText, { color: theme === 'light' ? '#000' : '#fff' }]}>Benim Kelimelerim</Text>
+                <Text style={[styles.levelCardText, { color: theme === 'light' ? '#000' : '#fff' }]}>Benim</Text>
+                <Text style={[styles.levelCardText, { color: theme === 'light' ? '#000' : '#fff' }]}>Kelimelerim</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingLeft: 12,
+    paddingLeft: 2,
   },
 
   levelCardText: {
