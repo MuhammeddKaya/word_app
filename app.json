@@ -4,7 +4,7 @@
     "slug": "word_app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/wordify.png",
+    "icon": "./assets/images/wordify1024tp.png",
     "scheme": "wordapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,7 +14,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/wordify.png",
+        "foregroundImage": "./assets/images/wordify1024tp.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -30,7 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/wordifylogopreview.png",
+          "image": "./assets/images/wordify_splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"

@@ -122,7 +122,7 @@ export default function LearnTest() {
   return (
     <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000' }]}>
       {/* Banner Ad Area */}
-      <View style={{ marginBottom: 20, alignItems: 'center', borderWidth: 1, borderColor: 'red', position: 'absolute', top: 0, width: '100%' }}> {/* Kırmızı ile işaretli alan */}
+      <View style={{ marginBottom: 20, alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8', position: 'absolute', top: 0, width: '100%' }}> {/* Kırmızı ile işaretli alan */}
         <BannerAd
           unitId={TestIds.BANNER} // Test ID
           size={BannerAdSize.FULL_BANNER} // Reklam boyutu

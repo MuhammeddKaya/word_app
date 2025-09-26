@@ -143,7 +143,7 @@ export default function FillTest() {
            <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title} - Fill</Text>
            <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
 
-           <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: 'red' }}>
+           <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8' }}>
               <BannerAd
                 unitId={TestIds.BANNER}
                 size={BannerAdSize.FULL_BANNER}

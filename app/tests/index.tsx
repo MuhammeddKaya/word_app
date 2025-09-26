@@ -4,6 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useTheme } from '../lib/ThemeProvider';
 import {Link, useRouter} from 'expo-router'
 import { useData } from '../lib/DataProvider'
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 export default function Tests(list: any,) {
   const { data, loading } = useData()
@@ -37,6 +38,21 @@ export default function Tests(list: any,) {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#222' }]}>
+      <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8' }}>
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.FULL_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+          onAdLoaded={() => {
+            console.log('Banner Ad Loaded');
+          }}
+          onAdFailedToLoad={(error) => {
+            console.error('Banner Ad Failed to Load:', error);
+          }}
+        />
+      </View>
       <View>
         <Text style={{ textAlign: 'center', marginBottom: 8, fontSize: 24, fontWeight: 'bold', color: theme === 'light' ? '#000' : '#fff' }}>{selectedSet?.title ?? ''}</Text>
       </View>

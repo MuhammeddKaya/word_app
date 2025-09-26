@@ -108,7 +108,7 @@ export default function SentenceTest() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000', justifyContent: 'center' }]}>
-      <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: 'red' }}>
+      <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8' }}>
        <BannerAd
           unitId={TestIds.BANNER} // Test ID
           size={BannerAdSize.FULL_BANNER} // Reklam boyutu
