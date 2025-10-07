@@ -21,7 +21,7 @@ export default function wordtests() {
   }
 
   const items = sets
-  console.log('level', level);
+  // //console.log('level', level);
 
   const filtered = React.useMemo(() => {
     const lvl = String(level ?? '').trim()

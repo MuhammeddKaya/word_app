@@ -5,6 +5,7 @@ import {Link, useRouter} from 'expo-router'
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from './lib/ThemeProvider'
 import { InterstitialAd, TestIds, AdEventType } from "react-native-google-mobile-ads";
+import { shouldShowInterstitial } from './lib/AdCounter';
 
 const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL);
 
@@ -17,7 +18,7 @@ export default function HomeScreen({}) {
 
   useEffect(() => {
     const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
-      console.log('Ad Loaded');
+      //console.log('Ad Loaded');
     });
 
     interstitial.addAdEventListener(AdEventType.ERROR, (error) => {
@@ -25,7 +26,7 @@ export default function HomeScreen({}) {
     });
 
     interstitial.addAdEventListener(AdEventType.CLOSED, () => {
-      console.log('Ad Closed');
+      //console.log('Ad Closed');
       interstitial.load(); // Load the next ad
     });
 
@@ -41,15 +42,18 @@ export default function HomeScreen({}) {
     if (interstitial.loaded) { // Corrected method name
       interstitial.show();
     } else {
-      console.log('Ad not loaded yet');
+      //console.log('Ad not loaded yet');
     }
   };
 
   const handleWordSetClick = (level: 'kolay' | 'orta' | 'zor' | 'kelimelerim') => {
-    if (interstitial.loaded) {
-      interstitial.show();
-    } else {
-      console.log('Ad not loaded yet');
+    // sadece her 4 tıklamada 1 reklam göster (oturum süresince)
+    if (shouldShowInterstitial()) {
+      if (interstitial.loaded) {
+        interstitial.show();
+      } else {
+        //console.log('Ad not loaded yet');
+      }
     }
     router.push(`/wordtests?level=${encodeURIComponent(level)}`);
   };

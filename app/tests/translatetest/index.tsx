@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
 import { useTheme } from '../../lib/ThemeProvider'
@@ -118,66 +118,77 @@ export default function TranslateTest() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000', justifyContent: 'center' }]}>
-      <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8' }}>
-        <BannerAd
-          unitId={TestIds.BANNER} // Test ID
-          size={BannerAdSize.FULL_BANNER} // Reklam boyutu
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
-          }}
-          onAdLoaded={() => {
-            console.log('Banner Ad Loaded');
-          }}
-          onAdFailedToLoad={(error) => {
-            console.error('Banner Ad Failed to Load:', error);
-          }}
-        />
-      </View>
-
-      <Text style={[styles.title, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{selectedSet.title} - Translate</Text>
-      <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
-
-      <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
-        <View style={{ alignItems: 'center' }}>
-          {showEnglish ? (
-            <Text style={styles.word}>{current.word}</Text>
-          ) : (
-            <Text style={{  marginBottom: 10, color: theme === 'light' ? '#222' : '#f6f7f8' }}>Kelime sesli olarak çalındı. Duymadıysanız tekrar çalın veya kelimeyi gösterin.</Text>
-          )}
-
-          <View style={styles.row}>
-            <TouchableOpacity style={styles.btn} onPress={() => speak(String(current.word))}>
-              <Text>🔊 Tekrar Oku</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.btn, styles.ghost]} onPress={() => setShowEnglish(s => !s)}>
-              <Text>{showEnglish ? 'İngilizceyi Gizle' : 'İngilizceyi Göster'}</Text>
-            </TouchableOpacity>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={80}
+    >
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ScrollView
+          contentContainerStyle={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000', justifyContent: 'center' }]}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8' }}>
+            <BannerAd
+              unitId={TestIds.BANNER} // Test ID
+              size={BannerAdSize.FULL_BANNER} // Reklam boyutu
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
+              }}
+              onAdLoaded={() => {
+                //console.log('Banner Ad Loaded');
+              }}
+              onAdFailedToLoad={(error) => {
+                console.error('Banner Ad Failed to Load:', error);
+              }}
+            />
           </View>
-        </View>
 
-        <TextInput
-          placeholderTextColor={theme === 'light' ? '#999' : '#ccc'}
-          value={input}
-          onChangeText={setInput}
-          placeholder="Türkçe karşılığını yazın"
-          style={styles.input}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onSubmitEditing={handleCheck}
-          returnKeyType="done"
-        />
+          <Text style={[styles.title, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{selectedSet.title} - Translate</Text>
+          <Text style={[styles.progress, { color: theme === 'light' ? '#222' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
 
-        <View style={styles.rowRight}>
-          <TouchableOpacity onPress={() => { if (index > 0) { setIndex(i => i - 1); setInput(''); setShowEnglish(false) } }} style={[styles.btn, index === 0 && styles.disabled]} disabled={index === 0}>
-            <Text>Önceki</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleCheck} style={styles.btn}>
-            <Text>{index < words.length - 1 ? 'Kontrol et' : 'Bitir'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+          <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
+            <View style={{ alignItems: 'center' }}>
+              {showEnglish ? (
+                <Text style={styles.word}>{current.word}</Text>
+              ) : (
+                <Text style={{  marginBottom: 10, color: theme === 'light' ? '#222' : '#f6f7f8' }}>Kelime sesli olarak çalındı. Duymadıysanız tekrar çalın veya kelimeyi gösterin.</Text>
+              )}
+
+              <View style={styles.row}>
+                <TouchableOpacity style={styles.btn} onPress={() => speak(String(current.word))}>
+                  <Text>🔊 Tekrar Oku</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.btn, styles.ghost]} onPress={() => setShowEnglish(s => !s)}>
+                  <Text>{showEnglish ? 'İngilizceyi Gizle' : 'İngilizceyi Göster'}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <TextInput
+              placeholderTextColor={theme === 'light' ? '#999' : '#ccc'}
+              value={input}
+              onChangeText={setInput}
+              placeholder="Türkçe karşılığını yazın"
+              style={styles.input}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onSubmitEditing={handleCheck}
+              returnKeyType="done"
+            />
+
+            <View style={styles.rowRight}>
+              <TouchableOpacity onPress={() => { if (index > 0) { setIndex(i => i - 1); setInput(''); setShowEnglish(false) } }} style={[styles.btn, index === 0 && styles.disabled]} disabled={index === 0}>
+                <Text>Önceki</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCheck} style={styles.btn}>
+                <Text>{index < words.length - 1 ? 'Kontrol et' : 'Bitir'}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import { SafeAreaView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useData } from '../../lib/DataProvider'
 import { useTheme } from '../../lib/ThemeProvider'
@@ -14,7 +14,25 @@ export default function SentenceTest() {
   const router = useRouter()
   const { data, loading, updateSet } = useData()
   const allSets = Object.values(data?.sets ?? {}).flat()
-  const selectedSet = React.useMemo(() => allSets.find((s: any) => s.id === String(setId)), [allSets, setId])
+  // Define the type for selectedSet
+  interface SelectedSet {
+    id: string;
+    title: string;
+    words: Array<{ word: string; example?: string }>;
+    completedTests?: {
+      LearnTest: number;
+      MatchTest: number;
+      TranslateTest: number;
+      FillTest: number;
+      SentenceTest?: number;
+    };
+    stars?: number;
+  }
+
+  // Update the selectedSet type
+  const selectedSet: SelectedSet | undefined = React.useMemo(() => {
+    return allSets.find((s: any) => s.id === String(setId)) as SelectedSet | undefined;
+  }, [allSets, setId]);
 
   const words = selectedSet?.words ?? []
   const [index, setIndex] = React.useState(0)
@@ -107,59 +125,70 @@ export default function SentenceTest() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000', justifyContent: 'center' }]}>
-      <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8' }}>
-       <BannerAd
-          unitId={TestIds.BANNER} // Test ID
-          size={BannerAdSize.FULL_BANNER} // Reklam boyutu
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
-          }}
-          onAdLoaded={() => {
-            console.log('Banner Ad Loaded');
-          }}
-          onAdFailedToLoad={(error) => {
-            console.error('Banner Ad Failed to Load:', error);
-          }}
-        />
-      </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={80}
+    >
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ScrollView
+          contentContainerStyle={[styles.container, { backgroundColor: theme === 'light' ? '#f6f7f8' : '#000000', justifyContent: 'center' }]}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={{ position: 'absolute', top: 0, width: '100%', alignItems: 'center', borderWidth: 1, borderColor: '#f6f7f8' }}>
+           <BannerAd
+              unitId={TestIds.BANNER} // Test ID
+              size={BannerAdSize.FULL_BANNER} // Reklam boyutu
+              requestOptions={{
+                requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
+              }}
+              onAdLoaded={() => {
+                //console.log('Banner Ad Loaded');
+              }}
+              onAdFailedToLoad={(error) => {
+                console.error('Banner Ad Failed to Load:', error);
+              }}
+            />
+          </View>
 
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title} - Cümle Tamamlama</Text>
-        <Text style={[styles.progress, { color: theme === 'light' ? '#666' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
-      </View>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: theme === 'light' ? '#000' : '#fff' }]}>{selectedSet.title} - Cümle Tamamlama</Text>
+            <Text style={[styles.progress, { color: theme === 'light' ? '#666' : '#f6f7f8' }]}>{index + 1} / {words.length}</Text>
+          </View>
 
-      <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>
-        <Text style={[styles.hint, { color: theme === 'light' ? '#666' : '#f6f7f8' }]}>Aşağıdaki cümledeki boşluğu doğru kelime ile doldurun:</Text>
-        <Text style={[styles.sentence, { color: theme === 'light' ? '#111' : '#fff' }]}>{masked}</Text>
+          <View style={[styles.card, { backgroundColor: theme === 'light' ? '#fff' : '#262626' }]}>        
+            <Text style={[styles.hint, { color: theme === 'light' ? '#666' : '#f6f7f8' }]}>Aşağıdaki cümledeki boşluğu doğru kelime ile doldurun:</Text>
+            <Text style={[styles.sentence, { color: theme === 'light' ? '#111' : '#fff' }]}>{masked}</Text>
 
-        {showAnswer && (
-          <Text style={[styles.answer, { color: theme === 'light' ? '#000' : '#fff' }]}>Doğru cevap: <Text style={{ fontWeight: 'bold', color: theme === 'light' ? '#000' : '#fff' }}>{expected}</Text></Text>
-        )}
+            {showAnswer && (
+              <Text style={[styles.answer, { color: theme === 'light' ? '#000' : '#fff' }]}>Doğru cevap: <Text style={{ fontWeight: 'bold', color: theme === 'light' ? '#000' : '#fff' }}>{expected}</Text></Text>
+            )}
 
-        <TextInput
-          value={input}
-          onChangeText={setInput}
-          placeholder="Kelimeyi yazın"
-          style={styles.input}
-          autoCapitalize="none"
-          autoCorrect={false}
-          onSubmitEditing={handleCheck}
-          returnKeyType="done"
-          editable={!showAnswer}
-        />
+            <TextInput
+              value={input}
+              onChangeText={setInput}
+              placeholder="Kelimeyi yazın"
+              style={styles.input}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onSubmitEditing={handleCheck}
+              returnKeyType="done"
+              editable={!showAnswer}
+            />
 
-        <View style={styles.controls}>
-          <TouchableOpacity onPress={goPrev} style={[styles.btn, index === 0 && styles.disabled]} disabled={index === 0 || showAnswer}>
-            <Text style={[styles.btnText, { color: theme === 'light' ? '#fff' : '#000' }]}>Önceki</Text>
-          </TouchableOpacity>
+            <View style={styles.controls}>
+              <TouchableOpacity onPress={goPrev} style={[styles.btn, index === 0 && styles.disabled]} disabled={index === 0 || showAnswer}>
+                <Text style={[styles.btnText, { color: theme === 'light' ? '#fff' : '#000' }]}>Önceki</Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleCheck} style={styles.btn} disabled={showAnswer}>
-            <Text style={[styles.btnText, { color: theme === 'light' ? '#fff' : '#000' }]}>{index < words.length - 1 ? 'Kontrol et' : 'Bitir'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+              <TouchableOpacity onPress={handleCheck} style={styles.btn} disabled={showAnswer}>
+                <Text style={[styles.btnText, { color: theme === 'light' ? '#fff' : '#000' }]}>{index < words.length - 1 ? 'Kontrol et' : 'Bitir'}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 

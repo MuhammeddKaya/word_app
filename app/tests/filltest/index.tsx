@@ -151,7 +151,7 @@ export default function FillTest() {
                   requestNonPersonalizedAdsOnly: true,
                 }}
                 onAdLoaded={() => {
-                  console.log('Banner Ad Loaded');
+                  //console.log('Banner Ad Loaded');
                 }}
                 onAdFailedToLoad={(error) => {
                   console.error('Banner Ad Failed to Load:', error);

@@ -130,7 +130,7 @@ export default function LearnTest() {
             requestNonPersonalizedAdsOnly: true, // GDPR uyumluluğu için
           }}
           onAdLoaded={() => {
-            console.log('Banner Ad Loaded');
+            //console.log('Banner Ad Loaded');
           }}
           onAdFailedToLoad={(error) => {
             console.error('Banner Ad Failed to Load:', error);
