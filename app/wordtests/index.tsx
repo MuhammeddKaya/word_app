@@ -77,7 +77,7 @@ export default function wordtests() {
   const itemWidth = (windowWidth - horizontalPadding - gapBetween * (columns - 1)) / columns;
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: theme === 'light' ? '#f6f7f8' : '#222' }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
+    <ScrollView style={{ flex: 1,marginBottom:48, backgroundColor: theme === 'light' ? '#f6f7f8' : '#222' }} contentContainerStyle={{ alignItems: 'center', paddingTop: 16 }}>
       <Text style={[styles.text, { color: theme === 'light' ? '#000' : '#fff' }]}>Kelime Testleri</Text>
       <View style={styles.row}>
         {filtered.map((it: any) => (
